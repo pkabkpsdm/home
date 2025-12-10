@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Informasi - PKA BKPSDM</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Alternatif untuk berbagai perangkat -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+      .header-container {
+        background: linear-gradient(90deg, #6a11cb 0%, #8e2de2 100%);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo-container {
+        display: flex;
+        align-items: center;
+      }
+      .logo-container img {
+        height: 50px;
+        margin-right: 10px;
+      }
+      .site-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .nav-menu {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      .nav-menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .nav-menu a:hover {
+        text-decoration: underline;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+      }
+      .search-container {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 5px 12px;
+      }
+      .search-container input {
+        background: transparent;
+        border: none;
+        color: white;
+        padding: 5px;
+        width: 180px;
+        outline: none;
+      }
+      .search-container input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .search-container button {
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .user-info:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .user-info i {
+        font-size: 16px;
+      }
+      .user-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        color: #333;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        min-width: 200px;
+        z-index: 1000;
+        display: none;
+        margin-top: 5px;
+      }
+      .user-dropdown.active {
+        display: block;
+      }
+      .user-dropdown-content {
+        padding: 15px;
+      }
+      .user-dropdown-content p {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .user-dropdown-content strong {
+        color: #6a11cb;
+      }
+      .logout-btn {
+        width: 100%;
+        padding: 8px;
+        background: #e91e63;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .logout-btn:hover {
+        background: #d81b60;
+      }
+
+      /* Informasi Section Styles */
+      .info-hero {
+        background: linear-gradient(135deg, #6a11cb 0%, #8e2de2 100%);
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+      }
+      .info-hero h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .info-hero p {
+        font-size: 18px;
+        max-width: 700px;
+        margin: 0 auto;
+        opacity: 0.9;
+      }
+
+      .info-categories {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 30px 0;
+        flex-wrap: wrap;
+      }
+      .category-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+      .category-btn.active {
+        background: white;
+        color: #6a11cb;
+      }
+      .category-btn:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Video Section Styles */
+      .video-section {
+        background: white;
+        padding: 60px 5%;
+        text-align: center;
+      }
+
+      .video-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .video-container h2 {
+        color: #6a11cb;
+        margin-bottom: 15px;
+        font-size: 32px;
+      }
+
+      .video-container > p {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .video-embed {
+        margin: 30px 0;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        background: #f8f9fa;
+        padding: 20px;
+      }
+
+      .video-embed iframe {
+        border-radius: 10px;
+        border: none;
+        width: 100%;
+        height: 500px;
+      }
+
+      .video-info {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 25px;
+        text-align: left;
+        border-left: 4px solid #6a11cb;
+      }
+
+      .video-info h3 {
+        color: #6a11cb;
+        margin-bottom: 15px;
+        font-size: 20px;
+      }
+
+      .video-info p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 0;
+      }
+
+      /* Buku Panduan Section */
+      .panduan-section {
+        background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 30px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .panduan-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .panduan-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+
+      .panduan-text h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .panduan-text p {
+        font-size: 16px;
+        opacity: 0.9;
+        margin-bottom: 20px;
+      }
+
+      .panduan-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        color: #2196f3;
+        padding: 12px 30px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .panduan-btn:hover {
+        background: #f0f0f0;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .click-counter {
+        margin-top: 15px;
+        font-size: 14px;
+        opacity: 0.8;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 15px;
+        border-radius: 20px;
+        display: inline-block;
+      }
+
+      /* Flowchart Section */
+      .flowchart-section {
+        background: white;
+        padding: 40px 20px;
+        margin-top: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+
+      .flowchart-section h2 {
+        color: #6a11cb;
+        margin-bottom: 20px;
+        font-size: 28px;
+      }
+
+      .flowchart-section p {
+        color: #666;
+        margin-bottom: 25px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      }
+
+      .flowchart-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid #eee;
+      }
+
+      .highlight-section {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        color: white;
+        padding: 50px 5%;
+        margin: 50px 0;
+        text-align: center;
+      }
+
+      .highlight-section h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      .highlight-section p {
+        font-size: 18px;
+        max-width: 800px;
+        margin: 0 auto 30px;
+      }
+
+      .highlight-btn {
+        display: inline-block;
+        background: white;
+        color: #ff6b6b;
+        padding: 12px 30px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+      .highlight-btn:hover {
+        background: #f0f0f0;
+        transform: scale(1.05);
+      }
+
+      footer {
+        background: linear-gradient(135deg, #4a148c 0%, #6a11cb 100%);
+        color: white;
+        padding: 30px 20px 15px;
+      }
+      .footer-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 30px;
+      }
+      .footer-contact .address {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .footer-contact .address i {
+        font-size: 24px;
+        color: #ffffff;
+        margin-top: 4px;
+      }
+      .footer-links ul {
+        list-style: none;
+      }
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+      }
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+      .footer-logos {
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .logo-container img {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-container img:hover {
+        transform: scale(1.05);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      @media (max-width: 900px) {
+        .header-top {
+          flex-direction: column;
+          gap: 15px;
+        }
+        .nav-menu {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .header-right {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .logo-container {
+          gap: 20px;
+        }
+        .logo-container img {
+          height: 40px;
+        }
+        .video-embed iframe {
+          height: 300px;
+        }
+        .panduan-section {
+          padding: 20px;
+        }
+        .panduan-text h3 {
+          font-size: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .logo-container {
+          gap: 15px;
+        }
+        .logo-container img {
+          height: 35px;
+        }
+        .video-embed iframe {
+          height: 250px;
+        }
+        .video-container h2 {
+          font-size: 24px;
+        }
+        .panduan-btn {
+          padding: 10px 20px;
+          font-size: 14px;
+        }
+      }
+
+     
+.informasi-utama {
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 30px auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .informasi-utama:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .informasi-container h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .informasi-container h2::before {
+            content: "📢";
+            font-size: 1.5rem;
+        }
+        
+        .informasi-container p {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 0 10px;
+        }
+        
+        .informasi-embed {
+            margin-top: 20px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .informasi-embed img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .informasi-embed img:hover {
+            transform: scale(1.02);
+        }
+        
+        .informasi-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .informasi-utama {
+                padding: 20px;
+                margin: 20px auto;
+            }
+            
+            .informasi-container h2 {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .informasi-container p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .informasi-container h2 {
+                font-size: 1.3rem;
+            }
+            
+            .informasi-container p {
+                font-size: 0.95rem;
+            }
+        }
+
+
+    </style>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="header-top">
+        <div class="logo-container">
+          <img
+            src="https://i.ibb.co.com/JWw8qHmM/logo-bkpsdm.png"
+            alt="Logo BKPSDM"
+          />
+          <div class="site-title">PKA BKPSDM</div>
+        </div>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="ksf.html">KONSULTASI, SARAN, FEEDBACK</a></li>
+            <li>
+              <a href="informasi.html" style="text-decoration: underline"
+                >INFORMASI</a
+              >
+            </li>
+          </ul>
+        </nav>
+        <div class="header-right">
+          <div class="search-container">
+            <input type="text" placeholder="Cari informasi..." />
+            <button>
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="user-info" id="user-info">
+            <i class="fas fa-user"></i><span id="user-display">Guest</span>
+          </div>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-content">
+              <p><strong>Nama:</strong> <span id="dropdown-name">-</span></p>
+              <p><strong>NIP:</strong> <span id="dropdown-username">-</span></p>
+              <button class="logout-btn" id="logout-btn">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="info-hero">
+      <h1>INFORMASI PENGEMBANGAN KOMPETENSI</h1>
+      <p>
+        Temukan berbagai informasi terkini seputar pengembangan kompetensi,
+        pelatihan, dan penugasan belajar untuk ASN Kabupaten Ciamis
+      </p>
+      <br>
+<!--
+      <div class="info-categories">
+        <button class="category-btn active" data-category="all">Semua</button>
+        <button class="category-btn" data-category="penugasan">
+          Penugasan Belajar
+        </button>
+        <button class="category-btn" data-category="pelatihan">
+          Pelatihan & Diklat
+        </button>
+        <button class="category-btn" data-category="ebook">
+          E-Book & Materi
+        </button>
+        <button class="category-btn" data-category="pengumuman">
+          Pengumuman
+        </button>
+      </div>
+    </section>
+-->
+    <!-- Video Section -->
+   <section class="informasi-utama">
+        <div class="informasi-container">
+            <h2 align="center">
+                Webinar Best Practices Inovasi dan Kolaborasi ASN
+            </h2>
+            <p>Pemanfaatan Limbah Tahu Menjadi Pupuk Organik Cair dan Paving Block</p>
+            <div class="informasi-embed">
+               <img src="https://i.ibb.co.com/0pL9wksV/Whats-App-Image-2025-10-31-at-07-24-32.jpg" alt="Whats-App-Image-2025-10-31-at-07-24-32" border="0">
+            </div>
+            <div class="informasi-footer">
+               Topic: Best Practice Inovasi dan Kolaborasi ASN <br> "Pemanfaatan Limbah Tahu Menjadi Pupuk Organik Cair Dan Paving Block"
+<br> Time: Oct 31, 2025 07:00 AM Jakarta
+<br> Join Zoom Meeting
+<br> https://zoom.us/j/95237745889?pwd=ZjC283qawTlKCAxRVbzKRVyhYfJ8AQ.1
+<br>
+Meeting ID: 952 3774 5889
+<br> Passcode: webinar
+            </div>
+        </div>
+    </section>
+
+
+      <section class="video-section">
+      <div class="video-container">
+        <h2>
+          <i class="fas fa-play-circle"></i> Video Tutorial Penggunaan Website
+          PKA BKPSDM Kabupaten Ciamis
+        </h2>
+        <p>Tonton video informatif tentang tatacara penggunaan website ini</p>
+
+        <div class="video-embed">
+          <!-- Video dari Google Drive -->
+          <iframe
+            src="https://drive.google.com/file/d/1rH5riJiL9LpqTM6XpYmdirmmGROaWRjH/preview"
+            width="100%"
+            height="500"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="Video Pengembangan Kompetensi ASN"
+          >
+          </iframe>
+        </div>
+
+        <div class="video-info">
+          <h3><i class="fas fa-info-circle"></i> Tentang Video Ini</h3>
+          <p>
+            Video ini berisi penjelasan lengkap dari mulai penjelasan setiap
+            menu utama yang tersedia, cara melakukan login, hingga pengiriman
+            konsultasi, saran, dan feedback.
+          </p>
+        </div>
+
+        <!-- Buku Panduan Section -->
+        <div class="panduan-section">
+          <div class="panduan-content">
+            <div class="panduan-icon">
+              <i class="fas fa-book-open"></i>
+            </div>
+            <div class="panduan-text">
+              <h3>Buku Panduan Lengkap</h3>
+              <p>
+                Akses buku panduan online untuk referensi lebih detail tentang
+                penggunaan website PKA BKPSDM
+              </p>
+            </div>
+            <a
+              href="https://online.fliphtml5.com/BukuPanduanWebsite/slxu/"
+              target="_blank"
+              class="panduan-btn"
+              id="panduan-btn"
+            >
+              <i class="fas fa-external-link-alt"></i> Buka Buku Panduan Online
+            </a>
+            <div class="click-counter" id="click-counter">
+              Telah diakses oleh <span id="click-count">0</span> pengguna
+            </div>
+          </div>
+        </div>
+
+        <!-- Flowchart Section -->
+        <div class="flowchart-section">
+          <h2><i class="fas fa-project-diagram"></i>Flowchart Penggunaan Website</h2>
+        
+          <img 
+            src="https://i.ibb.co.com/C5TPSj6z/Screenshot-726.png" 
+            alt="Flowchart Proses Pengembangan Kompetensi" 
+            class="flowchart-image"
+          >
+        </div>
+      </div>
+    </section>
+
+    <section class="highlight-section">
+      <h2>PENDAFTARAN PELATIHAN</h2>
+      <p>
+        Segera daftarkan diri Anda untuk mengikuti pelatihan yang
+        diselenggarakan oleh BKPSDM Kabupaten Ciamis. Kuota terbatas!
+      </p>
+      <a href="#" class="highlight-btn">Coming Soon</a>
+    </section>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-contact">
+          <h4>BKPSDM Ciamis</h4>
+          <div class="address">
+            <a href="https://maps.app.goo.gl/EWDwFJ5zFucuVRFv7" target="_blank">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </a>
+            <div>
+              <p>Jl. Sadananya No. 27</p>
+              <p>Kelurahan Maleber</p>
+              <p>Kecamatan Ciamis</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Link Terkait</h4>
+          <ul>
+            <li><a href="#">Website Kabupaten Ciamis</a></li>
+            <li><a href="#">Portal ASN</a></li>
+            <li><a href="#">Sistem Informasi Kepegawaian</a></li>
+          </ul>
+        </div>
+        <div class="footer-logos">
+          <div class="logo-container">
+            <img
+              src="https://i.ibb.co.com/tMnbFSr5/Lambang-Kabupaten-Ciamis.png"
+              alt="Lambang Kabupaten Ciamis"
+            />
+            <img
+              src="https://i.ibb.co.com/JWw8qHmM/logo-bkpsdm.png"
+              alt="Logo BKPSDM Kabupaten Ciamis"
+            />
+            <img
+              src="https://i.ibb.co.com/6JvSKyNf/Logo-Ber-AKHLAK-svg.png"
+              alt="Logo BerAKHLAK"
+            />
+            <img
+              src="https://i.ibb.co.com/99NKJGNg/bangga.png"
+              alt="bangga melayani bangsa"
+              border="0"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <p>Copyright © 2025 PKA BKPSDM Ciamis | All Rights Reserved, v1.0</p>
+      </div>
+    </footer>
+
+    <script>
+      // Kode untuk filter kategori (dipertahankan untuk navigasi)
+      document.addEventListener("DOMContentLoaded", function () {
+        const categoryButtons = document.querySelectorAll(".category-btn");
+
+        categoryButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            // Hapus class active dari semua tombol
+            categoryButtons.forEach((btn) => btn.classList.remove("active"));
+            // Tambah class active ke tombol yang diklik
+            this.classList.add("active");
+
+            // Scroll ke video section ketika kategori dipilih
+            document.querySelector(".video-section").scrollIntoView({
+              behavior: "smooth",
+            });
+          });
+        });
+
+        // Kode untuk tombol buku panduan
+        const panduanBtn = document.getElementById("panduan-btn");
+        const clickCountElement = document.getElementById("click-count");
+
+        // Ambil jumlah klik dari localStorage atau set ke 0
+        let clickCount = localStorage.getItem("panduanClickCount") || 0;
+        clickCountElement.textContent = clickCount;
+
+        // Tambah event listener untuk menghitung klik
+        panduanBtn.addEventListener("click", function () {
+          // Tambah jumlah klik
+          clickCount++;
+          clickCountElement.textContent = clickCount;
+
+          // Simpan ke localStorage
+          localStorage.setItem("panduanClickCount", clickCount);
+
+          // Animasi feedback
+          this.style.transform = "scale(0.95)";
+          setTimeout(() => {
+            this.style.transform = "scale(1)";
+          }, 150);
+        });
+
+        // Kode untuk status login
+        function checkLoginStatus() {
+          const userDisplay = document.getElementById("user-display");
+          const userInfo = document.getElementById("user-info");
+          const userDropdown = document.getElementById("user-dropdown");
+          const dropdownName = document.getElementById("dropdown-name");
+          const dropdownUsername = document.getElementById("dropdown-username");
+          const logoutBtn = document.getElementById("logout-btn");
+
+          const loginData = localStorage.getItem("loginData");
+
+          if (loginData) {
+            const userData = JSON.parse(loginData);
+            const loginTime = new Date(userData.loginTime);
+            const currentTime = new Date();
+
+            // Memeriksa apakah waktu login masih di hari yang sama
+            const isSameDay =
+              loginTime.getDate() === currentTime.getDate() &&
+              loginTime.getMonth() === currentTime.getMonth() &&
+              loginTime.getFullYear() === currentTime.getFullYear();
+
+            if (isSameDay) {
+              userDisplay.textContent = userData.name;
+              dropdownName.textContent = userData.name;
+              dropdownUsername.textContent = userData.username || "-";
+
+              // Tampilkan dropdown ketika user info diklik
+              userInfo.addEventListener("click", function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle("active");
+              });
+
+              // Tutup dropdown ketika klik di luar
+              document.addEventListener("click", function () {
+                userDropdown.classList.remove("active");
+              });
+
+              // Logout functionality
+              logoutBtn.addEventListener("click", function () {
+                localStorage.removeItem("loginData");
+                alert("Anda telah logout.");
+                window.location.reload();
+              });
+            } else {
+              // Jika login sudah lebih dari sehari, hapus data login
+              localStorage.removeItem("loginData");
+              showGuestView();
+            }
+          } else {
+            showGuestView();
+          }
+
+          function showGuestView() {
+            userDisplay.textContent = "Guest";
+          }
+        }
+
+        checkLoginStatus();
+      });
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+

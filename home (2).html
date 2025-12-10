@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PKA BKPSDM</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Alternatif untuk berbagai perangkat -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+      .header-container {
+        background: linear-gradient(90deg, #6a11cb 0%, #8e2de2 100%);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo-container {
+        display: flex;
+        align-items: center;
+      }
+      .logo-container img {
+        height: 50px;
+        margin-right: 10px;
+      }
+      .site-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .nav-menu {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      .nav-menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .nav-menu a:hover {
+        text-decoration: underline;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+      }
+      .search-container {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 5px 12px;
+      }
+      .search-container input {
+        background: transparent;
+        border: none;
+        color: white;
+        padding: 5px;
+        width: 180px;
+        outline: none;
+      }
+      .search-container input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .search-container button {
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .user-info:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .user-info i {
+        font-size: 16px;
+      }
+      .user-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        color: #333;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        min-width: 200px;
+        z-index: 1000;
+        display: none;
+        margin-top: 5px;
+      }
+      .user-dropdown.active {
+        display: block;
+      }
+      .user-dropdown-content {
+        padding: 15px;
+      }
+      .user-dropdown-content p {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .user-dropdown-content strong {
+        color: #6a11cb;
+      }
+      .logout-btn {
+        width: 100%;
+        padding: 8px;
+        background: #e91e63;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .logout-btn:hover {
+        background: #d81b60;
+      }
+      .help-link {
+        background: #ff6b6b;
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .hero-wrapper {
+        background: linear-gradient(
+            rgba(106, 17, 203, 0.85),
+            rgba(142, 45, 226, 0.85)
+          ),
+          url("https://i.ibb.co.com/BV3BxJhs/2.png") center/cover no-repeat;
+        padding: 50px 10%;
+        display: flex;
+        justify-content: center;
+      }
+      .hero-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        max-width: 1200px;
+        width: 100%;
+        color: white;
+        gap: 40px;
+      }
+      .hero-left {
+        flex: 1;
+      }
+      .hero-left h1 {
+        font-size: 32px;
+        color: #ffeb3b;
+        margin: 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+      }
+      .hero-left h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .hero-left p {
+        font-size: 20px;
+        margin-bottom: 5px;
+      }
+      .hero-left .tagline {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffc107;
+        margin-top: 15px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      }
+      .login-btn-large {
+        display: inline-block;
+        background: #e91e63;
+        color: white;
+        padding: 12px 30px;
+        margin-top: 20px;
+        font-size: 18px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s ease;
+      }
+      .login-btn-large:hover {
+        background: #d81b60;
+      }
+      .login-note {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #eee;
+      }
+      .hero-right {
+        flex: 0.5;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+      }
+      .hero-right h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .resume-box {
+        background: rgba(255, 255, 255, 0.2);
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .resume-box h4 {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+      .resume-box p {
+        font-size: 14px;
+        font-weight: bold;
+        color: #ffeb3b;
+      }
+
+      /* ====== KOMPETENSI SECTION ====== */
+      .section-title {
+        text-align: center;
+        font-size: 28px;
+        color: #6a11cb;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+      }
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, #6a11cb, #8e2de2);
+        border-radius: 2px;
+      }
+      .kompetensi-section {
+        padding: 50px 10%;
+        background: #fff;
+        text-align: center;
+      }
+
+      .kompetensi-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .kompetensi-row {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        width: 100%;
+      }
+
+      .kompetensi-box {
+        background: #fdf5ff;
+        border: 2px solid #e2ccff;
+        border-radius: 15px;
+        padding: 30px 15px;
+        text-align: center;
+        text-decoration: none;
+        color: #6a11cb;
+        box-shadow: 0 4px 12px rgba(106, 17, 203, 0.1);
+        transition: all 0.3s ease;
+        width: 180px;
+      }
+
+      .kompetensi-box i {
+        font-size: 36px;
+        margin-bottom: 15px;
+        color: #8e2de2;
+      }
+
+      .kompetensi-box p {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .kompetensi-box:hover {
+        transform: translateY(-6px);
+        background: linear-gradient(135deg, #6a11cb, #8e2de2);
+        color: #fff;
+        box-shadow: 0 6px 16px rgba(106, 17, 203, 0.3);
+      }
+
+      .kompetensi-box:hover i {
+        color: #ffeb3b;
+      }
+
+      .about-section {
+        padding: 60px 10%;
+        background: white;
+      }
+      .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .about-title {
+        text-align: center;
+        font-size: 28px;
+        color: #6a11cb;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+      }
+      .about-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, #6a11cb, #8e2de2);
+        border-radius: 2px;
+      }
+      .about-content {
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .about-content h3 {
+        color: #6a11cb;
+        margin-bottom: 20px;
+        font-size: 22px;
+        text-align: center;
+      }
+      .about-content p {
+        line-height: 1.6;
+        margin-bottom: 20px;
+        text-align: justify;
+      }
+      .functions-list {
+        list-style: none;
+        margin: 25px 0;
+      }
+      .functions-list li {
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #f0f0ff;
+        border-left: 4px solid #6a11cb;
+        border-radius: 0 5px 5px 0;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .functions-list li:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .functions-list i {
+        margin-right: 10px;
+        color: #6a11cb;
+      }
+      footer {
+        background: linear-gradient(135deg, #4a148c 0%, #6a11cb 100%);
+        color: white;
+        padding: 30px 20px 15px;
+      }
+      .footer-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 30px;
+      }
+      .footer-contact .address {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .footer-contact .address i {
+        font-size: 24px;
+        color: #ffffff; /* ubah sesuai warna tema */
+        margin-top: 4px;
+      }
+      .footer-links ul {
+        list-style: none;
+      }
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+      }
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+
+      .footer-logos {
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .logo-container img {
+        height: 50px; /* 🔎 diperkecil dari sebelumnya */
+        width: auto;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-container img:hover {
+        transform: scale(1.05);
+      }
+
+      @media (max-width: 768px) {
+        .logo-container {
+          gap: 20px;
+        }
+        .logo-container img {
+          height: 40px; /* lebih kecil di tablet */
+        }
+      }
+
+      @media (max-width: 480px) {
+        .logo-container {
+          gap: 15px;
+        }
+        .logo-container img {
+          height: 35px; /* lebih kecil di HP */
+        }
+      }
+
+    .evaluasi-btn-large {
+  display: inline-block;
+  background: #230577;
+  color: white;
+  padding: 12px 30px;
+  margin-top: 20px;
+  font-size: 18px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  text-align: center;
+}
+
+/* Untuk parent container-nya */
+.container-tombol {
+  text-align: center;
+}
+      .evaluasi-btn-large:hover {
+        background: #1b9cd8;
+      }
+
+      .footer-copyright {
+        padding: 15px 0;
+        text-align: center;
+        font-size: 14px;
+        margin-top: auto;
+      }
+
+      .copyright {
+        margin: 0;
+        color: #a59f9f;
+        font-size: 14px;
+      }
+
+      .footer-link {
+        color: #2771df; /* Warna biru yang lebih soft */
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .footer-link:hover {
+        color: #1564ca; /* Warna biru yang sedikit lebih gelap saat hover */
+        text-decoration: underline;
+      }
+      @media (max-width: 900px) {
+        .hero-container {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .hero-left,
+        .hero-right {
+          width: 100%;
+        }
+        .header-top {
+          flex-direction: column;
+          gap: 15px;
+        }
+        .nav-menu {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .header-right {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        /* Responsive untuk kompetensi section */
+        .kompetensi-row {
+          flex-wrap: wrap;
+        }
+        .kompetensi-box {
+          width: 160px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="header-top">
+        <div class="logo-container">
+          <img
+            
+            src="https://i.ibb.co.com/JWw8qHmM/logo-bkpsdm.png"
+            alt="Logo BKPSDM"
+          />
+          <div class="site-title">PKA BKPSDM</div>
+        </div>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="ksf.html">KONSULTASI, SARAN, FEEDBACK</a></li>
+            <li><a href="informasi.html">INFORMASI</a></li>
+          </ul>
+        </nav>
+        <div class="header-right">
+          <div class="search-container">
+            <input type="text" placeholder="Cari informasi..." /><button>
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="user-info" id="user-info">
+            <i class="fas fa-user"></i><span id="user-display">Guest</span>
+          </div>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-content">
+              <p><strong>Nama:</strong> <span id="dropdown-name">-</span></p>
+              <p><strong>NIP:</strong> <span id="dropdown-username">-</span></p>
+              <button class="logout-btn" id="logout-btn">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <section class="hero-wrapper">
+      <div class="hero-container">
+        <div class="hero-left">
+          <h2>SELAMAT DATANG DI WEBSITE</h2>
+          <h1>PENGEMBANGAN KOMPETENSI APARATUR</h1>
+          <h2>BKPSDM KABUPATEN CIAMIS</h2>
+          <p>ASN KABUPATEN CIAMIS</p>
+          <p class="tagline">BERDAYA DAN BERKOMPETEN</p>
+          <a href="login.html" class="login-btn-large" id="login-link">LOGIN</a>
+          <p class="login-note" id="login-note">
+            Segera Login untuk Akses Lengkap dari Website
+          </p>
+        </div>
+        <div class="hero-right">
+          <h3>RESUME KONSULTASI SARAN DAN FEEDBACK</h3>
+          <div class="resume-box">
+            <h4>KONSULTASI</h4>
+            <p id="konsultasi-count">Memuat...</p>
+          </div>
+          <div class="resume-box">
+            <h4>SARAN</h4>
+            <p id="saran-count">Memuat...</p>
+          </div>
+          <div class="resume-box">
+            <h4>FEEDBACK</h4>
+            <p id="feedback-count">Memuat...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ====== KOMPETENSI SECTION ====== -->
+    <section class="kompetensi-section">
+      <h2 class="section-title">Layanan</h2>
+      <div class="kompetensi-container">
+        <!-- Baris pertama (3 kotak) -->
+        <div class="kompetensi-row">
+          <a href="#" class="kompetensi-box">
+            <i class="fas fa-user-tie"></i>
+            <p>Pelatihan Manajerial</p>
+          </a>
+          <a href="#" class="kompetensi-box">
+            <i class="fas fa-cogs"></i>
+            <p>Pelatihan Teknis</p>
+          </a>
+          <a href="#" class="kompetensi-box">
+            <i class="fas fa-users"></i>
+            <p>Pelatihan Sosial Kultural</p>
+          </a>
+        </div>
+
+        <!-- Baris kedua (3 kotak) -->
+        <div class="kompetensi-row">
+          <a href="https://sibangpeci.ciamiskab.go.id/" class="kompetensi-box">
+            <i class="fas fa-book"></i>
+            <p>SIBANGPECI</p>
+          </a>
+          <a href="asesmen.html" class="kompetensi-box">
+            <i class="fas fa-chart-bar"></i>
+            <p>Asesmen Potensi dan Kompetensi</p>
+          </a>
+          <a href="tubel.html" class="kompetensi-box">
+            <i class="fas fa-graduation-cap"></i>
+            <p>Tugas Belajar</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="about-container">
+        <h2 class="about-title">Selayang Pandang</h2>
+        <div class="about-content">
+          <h3>
+            Bidang Pengembangan Kompetensi Aparatur (PKA) BKPSDM Kabupaten
+            Ciamis
+          </h3>
+          <p>
+            Bidang PKA BKPSDM Kabupaten Ciamis berperan strategis dalam
+            meningkatkan kualitas dan profesionalisme ASN. Fokus utama bidang
+            ini adalah merencanakan, melaksanakan, dan mengevaluasi program
+            pengembangan kompetensi agar ASN mampu memberikan pelayanan publik
+            yang optimal.
+          </p>
+          <p>Fungsi utama Bidang PKA meliputi:</p>
+          <ul class="functions-list">
+            <li>
+              <i class="fas fa-chart-line"></i> Analisis kebutuhan dan
+              perencanaan pengembangan kompetensi ASN.
+            </li>
+            <li>
+              <i class="fas fa-graduation-cap"></i> Penyelenggaraan pendidikan
+              dan pelatihan teknis, fungsional, serta manajerial.
+            </li>
+            <li>
+              <i class="fas fa-laptop-code"></i> Fasilitasi pengembangan
+              kompetensi berbasis inovasi dan teknologi digital.
+            </li>
+            <li>
+              <i class="fas fa-clipboard-check"></i> Monitoring dan evaluasi
+              efektivitas program pengembangan kompetensi.
+            </li>
+          </ul>
+          <p>
+            Dengan komitmen tersebut, Bidang PKA hadir sebagai pilar dalam
+            membentuk ASN yang profesional, adaptif, dan siap menghadapi
+            tantangan birokrasi modern.
+          </p>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <div class="footer-container">
+        <div class="footer-contact">
+          <h4>BKPSDM Ciamis</h4>
+          <div class="address">
+            <a href="https://maps.app.goo.gl/EWDwFJ5zFucuVRFv7" target="_blank">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </a>
+            <div>
+              <p>Jl. Sadananya No. 27</p>
+              <p>Kelurahan Maleber</p>
+              <p>Kecamatan Ciamis</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Link Terkait</h4>
+          <ul>
+            <li>
+              <a href="https://asn.ciamiskab.go.id/home">ASN Ciamis</a>
+            </li>
+            <li>
+              <a href="https://sibangpeci.ciamiskab.go.id/">Si Bang Peci</a>
+            </li>
+           
+          </ul>
+        </div>
+        <div class="footer-logos">
+          <div class="logo-container">
+            <img
+              src="https://i.ibb.co.com/tMnbFSr5/Lambang-Kabupaten-Ciamis.png"
+              alt="Lambang Kabupaten Ciamis"
+            />
+            <img
+              src="https://i.ibb.co.com/JWw8qHmM/logo-bkpsdm.png"
+              alt="Logo BKPSDM Kabupaten Ciamis"
+            />
+            <img
+              src="https://i.ibb.co.com/6JvSKyNf/Logo-Ber-AKHLAK-svg.png"
+              alt="Logo BerAKHLAK"
+            />
+            <img
+              src="https://i.ibb.co.com/99NKJGNg/bangga.png"
+              alt="Bangga Melayani Bangsa"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="container-tombol">
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdl9y1wT1xNR-D3MYOnwTVkp9eJWdN7NbAkl8DTyjOpm-QhTQ/viewform" class="evaluasi-btn-large">Form Evaluasi</a>
+</div>
+      <div class="footer-copyright">
+        <p class="copyright">
+          Copyright © 2025
+          <a
+            href="https://www.pka-bkpsdm-ciamiskab.my.id/home"
+            class="footer-link"
+            >PKA BKPSDM Kabupaten Ciamis</a
+          >
+          | All Rights Reserved, v1.0
+        </p>
+      </div>
+    </footer>
+    <script>
+      function checkLoginStatus() {
+        const userDisplay = document.getElementById("user-display");
+        const loginLink = document.getElementById("login-link");
+        const loginNote = document.getElementById("login-note");
+        const userInfo = document.getElementById("user-info");
+        const userDropdown = document.getElementById("user-dropdown");
+        const dropdownName = document.getElementById("dropdown-name");
+        const dropdownUsername = document.getElementById("dropdown-username");
+        const logoutBtn = document.getElementById("logout-btn");
+
+        const loginData = localStorage.getItem("loginData");
+
+        if (loginData) {
+          const userData = JSON.parse(loginData);
+          const loginTime = new Date(userData.loginTime);
+          const currentTime = new Date();
+
+          // Memeriksa apakah waktu login masih di hari yang sama
+          const isSameDay =
+            loginTime.getDate() === currentTime.getDate() &&
+            loginTime.getMonth() === currentTime.getMonth() &&
+            loginTime.getFullYear() === currentTime.getFullYear();
+
+          if (isSameDay) {
+            userDisplay.textContent = userData.name;
+            dropdownName.textContent = userData.name;
+            dropdownUsername.textContent = userData.username || "-";
+
+            // Sembunyikan tombol login dan note
+            loginLink.style.display = "none";
+            loginNote.style.display = "none";
+
+            // Tampilkan dropdown ketika user info diklik
+            userInfo.addEventListener("click", function (e) {
+              e.stopPropagation();
+              userDropdown.classList.toggle("active");
+            });
+
+            // Tutup dropdown ketika klik di luar
+            document.addEventListener("click", function () {
+              userDropdown.classList.remove("active");
+            });
+
+            // Logout functionality
+            logoutBtn.addEventListener("click", function () {
+              localStorage.removeItem("loginData");
+              alert("Anda telah logout.");
+              window.location.reload();
+            });
+          } else {
+            // Jika login sudah lebih dari sehari, hapus data login
+            localStorage.removeItem("loginData");
+            showGuestView();
+          }
+        } else {
+          showGuestView();
+        }
+
+        function showGuestView() {
+          userDisplay.textContent = "Guest";
+          loginLink.style.display = "inline-block";
+          loginNote.style.display = "block";
+          loginLink.textContent = "LOGIN";
+          loginLink.href = "login.html";
+          loginLink.onclick = null;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", checkLoginStatus);
+    </script>
+    <script>
+      // URL Web App Google Apps Script Anda
+      const APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbyMnYcysMHj3tolv8bvsJh7Z-8tg0wmtlHL01ozRjqiHGeiHn8a4f3SnfCA5qkiEfRG/exec";
+
+      // Fungsi untuk mengambil dan menampilkan jumlah masukan
+      async function updateResumeCount() {
+        const konsultasiCountElement =
+          document.getElementById("konsultasi-count");
+        const saranCountElement = document.getElementById("saran-count");
+        const feedbackCountElement = document.getElementById("feedback-count");
+
+        try {
+          const response = await fetch(APPS_SCRIPT_URL);
+          if (!response.ok) {
+            throw new Error("Gagal mengambil data dari server.");
+          }
+          const data = await response.json();
+
+          // Perbarui teks di elemen HTML
+          konsultasiCountElement.textContent = `${data.konsultasi} Masukan`;
+          saranCountElement.textContent = `${data.saran} Masukan`;
+          feedbackCountElement.textContent = `${data.feedback} Masukan`;
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          // Opsional: Tampilkan pesan error ke pengguna
+          konsultasiCountElement.textContent = "Gagal memuat";
+          saranCountElement.textContent = "Gagal memuat";
+          feedbackCountElement.textContent = "Gagal memuat";
+        }
+      }
+
+      // Panggil fungsi ini saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", updateResumeCount);
+    </script>
+  </body>
+</html>

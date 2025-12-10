@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Tugas Belajar - BKPSDM</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Alternatif untuk berbagai perangkat -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* --- Gaya Global dan Reset --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        background-color: #f4f6f9;
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* --- Header dan Navigasi --- */
+      .header-container {
+        background: linear-gradient(90deg, #1a5f7a 0%, #2a9d8f 100%);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .logo-section h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+      }
+      .logo-section p {
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+      .user-info:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .user-info i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+
+      /* --- User Dropdown --- */
+      .user-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        color: #333;
+        border-radius: 5px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 200px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+      }
+      .user-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .dropdown-header {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      .dropdown-header h4 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
+        color: #1a5f7a;
+      }
+      .dropdown-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #666;
+      }
+      .dropdown-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+      .dropdown-item:hover {
+        background-color: #f0f0f0;
+      }
+
+      /* --- Tata Letak Utama --- */
+      .main-content {
+        padding: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* --- back to home --- */
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #1a5f7a;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        margin-bottom: 30px;
+        transition: background 0.3s;
+      }
+
+      .back-button:hover {
+        background: #144b61;
+      }
+
+      /* --- Pemilih Tahun --- */
+      .year-buttons {
+        margin-bottom: 30px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 15px;
+      }
+      .year-buttons button {
+        padding: 10px 20px;
+        border: 2px solid #1a5f7a;
+        background-color: white;
+        color: #1a5f7a;
+        font-weight: 600;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+      }
+      .year-buttons button:hover {
+        background-color: #f0f7f8;
+      }
+      .year-buttons button.active {
+        background-color: #1a5f7a;
+        color: white;
+        box-shadow: 0 4px 8px rgba(26, 95, 122, 0.4);
+      }
+
+      /* --- Kartu Statistik --- */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+      }
+      .card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        margin: 0 0 5px 0;
+        font-size: 1rem;
+        color: #777;
+        font-weight: 500;
+      }
+      .card p {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      .card i {
+        font-size: 2.5rem;
+        opacity: 0.6;
+      }
+
+      /* Warna khusus untuk statistik */
+      .card:nth-child(1) i {
+        color: #e76f51;
+      }
+      .card:nth-child(1) p {
+        color: #e76f51;
+      }
+      .card:nth-child(2) i {
+        color: #2a9d8f;
+      }
+      .card:nth-child(2) p {
+        color: #2a9d8f;
+      }
+      .card:nth-child(3) i {
+        color: #f4a261;
+      }
+      .card:nth-child(3) p {
+        color: #f4a261;
+      }
+
+      /* --- Area Chart --- */
+      .chart-container {
+        background-color: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 40px;
+        height: 450px;
+        position: relative;
+      }
+
+      /* --- Alur Proses (Roadmap Zigzag Vertikal) --- */
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a5f7a;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #2a9d8f;
+        padding-bottom: 10px;
+      }
+
+      .process-flow {
+        position: relative;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      /* Garis tengah Timeline */
+      .process-flow::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 4px;
+        background: linear-gradient(to bottom, #1a5f7a, #2a9d8f);
+        margin-left: -2px;
+      }
+
+      .process-step {
+        position: relative;
+        width: 50%;
+        margin-bottom: 40px;
+        padding: 0 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease-out;
+      }
+      .process-step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Penempatan langkah genap (kanan) */
+      .process-step:nth-child(even) {
+        margin-left: 50%;
+        padding-left: 70px;
+        border-left: 2px solid #ddd;
+        border-radius: 0 8px 8px 0;
+      }
+      /* Penempatan langkah ganjil (kiri) */
+      .process-step:nth-child(odd) {
+        margin-right: 50%;
+        text-align: right;
+        padding-right: 70px;
+        border-right: 2px solid #ddd;
+        border-radius: 8px 0 0 8px;
+      }
+
+      /* Card Konten */
+      .step-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+      }
+      .step-content h4 {
+        margin: 0 0 5px 0;
+        color: #1a5f7a;
+        font-size: 1.2rem;
+      }
+      .step-content p {
+        font-size: 0.95rem;
+        color: #666;
+        margin: 0;
+      }
+
+      /* Ikon di garis tengah */
+      .step-icon {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        background-color: #2a9d8f;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 1.2rem;
+        border: 4px solid white;
+        box-shadow: 0 0 0 5px #1a5f7a;
+        position: absolute;
+        top: 5px;
+        z-index: 3;
+      }
+
+      /* Ikon di sisi kiri (untuk langkah ganjil) */
+      .process-step:nth-child(odd) .step-icon {
+        right: -25px;
+      }
+
+      /* Ikon di sisi kanan (untuk langkah genap) */
+      .process-step:nth-child(even) .step-icon {
+        left: -25px;
+      }
+
+      /* --- Dokumen Hukum --- */
+      .legal-docs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .doc-card {
+        background-color: white;
+        padding: 20px;
+        border-left: 5px solid #f4a261;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+      }
+      .doc-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      }
+      .doc-card i {
+        font-size: 2rem;
+        color: #f4a261;
+        margin-right: 15px;
+      }
+      .doc-card h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #1a5f7a;
+      }
+      .doc-card p {
+        font-size: 0.85rem;
+        color: #999;
+      }
+
+      /* --- Lembaga Pendidikan --- */
+      .institutions {
+        margin-top: 40px;
+      }
+      .institution-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .institution-card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+      }
+      .institution-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      .institution-logo {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 3px solid #f0f0f0;
+      }
+      .institution-info {
+        flex: 1;
+      }
+      .institution-info h4 {
+        margin: 0 0 5px 0;
+        color: #1a5f7a;
+        font-size: 1.1rem;
+      }
+      .institution-info p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #666;
+      }
+      .institution-count {
+        background-color: #1a5f7a;
+        color: white;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .no-data {
+        text-align: center;
+        padding: 40px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        color: #666;
+      }
+      .no-data i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #ddd;
+      }
+
+      /* --- Footer --- */
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #34495e;
+        color: #ecf0f1;
+        font-size: 0.85rem;
+        margin-top: 40px;
+      }
+
+      /* --- Loading & Error States --- */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #1a5f7a;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .error-message {
+        background-color: #ffeaa7;
+        border: 1px solid #fdcb6e;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        color: #e17055;
+      }
+
+      /* --- Responsiveness --- */
+      @media (max-width: 900px) {
+        .process-flow::before {
+          left: 20px;
+        }
+        .process-step {
+          width: 100%;
+          margin-left: 0;
+          padding-left: 70px;
+          padding-right: 10px;
+          border-left: 2px solid #ddd;
+          border-right: none;
+        }
+        .process-step:nth-child(even) {
+          margin-left: 0;
+          padding-left: 70px;
+          border-radius: 0 8px 8px 0;
+        }
+        .process-step:nth-child(odd) {
+          margin-right: 0;
+          text-align: left;
+          padding-right: 10px;
+          padding-left: 70px;
+          border-radius: 0 8px 8px 0;
+        }
+        .process-step:nth-child(odd) .step-icon {
+          right: auto;
+          left: -25px;
+        }
+        .process-step:nth-child(even) .step-icon {
+          left: -25px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .header-container {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 10px 20px;
+        }
+        .user-info {
+          margin-top: 10px;
+        }
+        .main-content {
+          padding: 20px;
+        }
+        .year-buttons {
+          justify-content: center;
+        }
+        .institution-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* --- Gaya untuk Section Persyaratan --- */
+      .requirements-section {
+        margin-top: 40px;
+      }
+      .requirements-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .requirements-table th {
+        background: #1a5f7a;
+        color: white;
+        padding: 1rem;
+        text-align: left;
+      }
+
+      .requirements-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .requirements-table tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .requirements-table tr:hover {
+        background-color: #e9f7fe;
+      }
+
+      /* --- Gaya untuk Alur Interaktif Baru --- */
+      .interactive-flow-section {
+        margin-top: 40px;
+      }
+
+      .interactive-flow-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .interactive-flow-step {
+        flex: 1;
+        min-width: 250px;
+        max-width: 300px;
+        background: white;
+        border-radius: 10px;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        position: relative;
+        transition: transform 0.3s ease;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease-out;
+      }
+
+      .interactive-flow-step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .interactive-flow-step:hover {
+        transform: translateY(-10px);
+      }
+
+      .interactive-step-number {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+        background: #2a9d8f;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .interactive-step-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #2a9d8f;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="logo-section">
+        <h1>Dashboard Tugas Belajar</h1>
+        <p>Bidang PKA BKPSDM Kabupaten Ciamis</p>
+      </div>
+      <div class="user-info" id="user-info">
+        <i class="fas fa-user-circle"></i>
+        <span id="user-display">Guest</span>
+        <div class="user-dropdown" id="user-dropdown">
+          <div class="dropdown-header">
+            <h4 id="dropdown-name">Nama Pengguna</h4>
+            <p id="dropdown-username">username@domain.com</p>
+          </div>
+          <div class="dropdown-item" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="rekapitulasi-section">
+        <a href="index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Kembali ke Home
+        </a>
+        <br />
+        <h2 class="section-title">Rekapitulasi dan Statistik Tugas Belajar</h2>
+
+        <!-- Bagian yang diganti -->
+        <div class="year-buttons">
+          <button class="active" onclick="changeYear(2025)">2025</button>
+          <button onclick="changeYear(2024)">2024</button>
+          <button onclick="changeYear(2023)">2023</button>
+          <button onclick="changeYear(2022)">2022</button>
+        </div>
+
+        <div class="cards" id="statsCards">
+          <!-- Kartu statistik akan diisi oleh JavaScript -->
+          <div class="loading-container">
+            <div class="loading"></div>
+            <p>Memuat data statistik...</p>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="tubelChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Alur Interaktif Baru -->
+      <section class="interactive-flow-section">
+        <h2 class="section-title">Alur Pengajuan Tugas Belajar PNS</h2>
+        <div class="interactive-flow-container">
+          <div class="interactive-flow-step">
+            <div class="interactive-step-number">1</div>
+            <div class="interactive-step-icon">📝</div>
+            <h3>Pengajuan Permohonan</h3>
+            <p>
+              Pegawai mengajukan permohonan tugas belajar kepada atasan
+              langsung.
+            </p>
+          </div>
+          <div class="interactive-flow-step">
+            <div class="interactive-step-number">2</div>
+            <div class="interactive-step-icon">✅</div>
+            <h3>Rekomendasi Atasan</h3>
+            <p>
+              Atasan memberikan rekomendasi dan meneruskan ke pimpinan unit
+              kerja.
+            </p>
+          </div>
+          <div class="interactive-flow-step">
+            <div class="interactive-step-number">3</div>
+            <div class="interactive-step-icon">📤</div>
+            <h3>Penyampaian ke BKPSDM</h3>
+            <p>
+              Pimpinan unit kerja mengirimkan berkas ke BKPSDM berupa surat
+              permohonan dan SK Tubel.
+            </p>
+          </div>
+          <div class="interactive-flow-step">
+            <div class="interactive-step-number">4</div>
+            <div class="interactive-step-icon">🔍</div>
+            <h3>Verifikasi & Pengajuan</h3>
+            <p>
+              BKPSDM melakukan verifikasi administrasi dan memproses pengajuan
+              sesuai ketentuan.
+            </p>
+          </div>
+          <div class="interactive-flow-step">
+            <div class="interactive-step-number">5</div>
+            <div class="interactive-step-icon">📨</div>
+            <h3>Penyampaian Hasil</h3>
+            <p>
+              Hasil proses dari BKPSDM disampaikan kepada pegawai yang
+              bersangkutan.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Persyaratan -->
+      <section class="requirements-section">
+        <h2 class="section-title">Persyaratan Tugas Belajar</h2>
+        <table class="requirements-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Dokumen</th>
+              <th>Keterangan</th>
+              <!-- <th>Verifikasi</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Surat Permohonan diketahui atasan langsung (form 1)</td>
+              <td>Asli</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>
+                Surat Rekomendasi tugas belajar dari Kepala OPD (form 2 & 3)
+              </td>
+              <td>Asli</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Surat Pengantar Kepala OPD (form 4)</td>
+              <td>Asli</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>SK PNS</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>SK Jabatan</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>
+                Pedoman Penyelenggaraan program studi (memuat tentang nama
+                program studi yang diikuti dan masa perkuliahan)
+              </td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>SK Pangkat terakhir</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>PPK PNS 2 tahun terakhir</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td>Surat Keterangan Sehat</td>
+              <td>Asli</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>Surat Keterangan Tidak Sedang / Tidak Pernah (form 5)</td>
+              <td>Asli bermaterai</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td>Surat Perjanjian Tugas Belajar</td>
+              <td>Asli</td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td>
+                Surat Keterangan Beasiswa dan/atau Surat Keterangan Lulus
+                Seleksi
+              </td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td>Surat Keterangan Akreditasi Program Studi</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td>Izin Seleksi</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td>Jadwal Kuliah</td>
+              <td>Copy legalisir</td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td>Surat Persetujuan Kelas Jauh, Kelas Malam, Sabtu Minggu</td>
+              <td>Copy legalisir</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="legal-docs-section">
+        <h2 class="section-title">Dokumen Hukum Terkait</h2>
+        <div class="legal-docs-grid">
+          <div class="doc-card" data-file="PP 11 Tahun 2017">
+            <i class="fas fa-balance-scale"></i>
+            <div>
+              <h4>PP 11 Tahun 2017</h4>
+              <p>Manajemen PNS</p>
+            </div>
+          </div>
+          <div class="doc-card" data-file="PerKa BKN No. 2 Tahun 2017">
+            <i class="fas fa-balance-scale"></i>
+            <div>
+              <h4>PerKa BKN No. 2 Tahun 2017</h4>
+              <p>Tata Cara Pemberian Tugas Belajar</p>
+            </div>
+          </div>
+          <div class="doc-card" data-file="Peraturan Gubernur">
+            <i class="fas fa-balance-scale"></i>
+            <div>
+              <h4>Peraturan Gubernur</h4>
+              <p>Regulasi Tugas Belajar Daerah</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bagian Lembaga Pendidikan yang diganti -->
+      <section class="institutions">
+        <h2 class="section-title">
+          Lembaga Pendidikan (Urut Berdasarkan Peminat)
+        </h2>
+        <div class="institution-grid" id="institutionList">
+          <!-- Data lembaga pendidikan akan diisi oleh JavaScript -->
+          <div class="loading-container">
+            <div class="loading"></div>
+            <p>Memuat data lembaga pendidikan...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2025 Bidang Pengembangan Kompetensi Aparatur - BKPSDM Kabupaten
+      Ciamis
+    </footer>
+
+    <script>
+      // URL Google Apps Script untuk mengambil data dari spreadsheet
+      const scriptUrl =
+        "https://script.google.com/macros/s/AKfycbyhf3tw8HX2NH8UVOsMZPoOBx-MhdtYVM5jCTN2JchNNpUsbE2BBCH0EOL0hvaxPCIt/exec";
+
+      let allData = {};
+      let chart;
+
+      // Fungsi untuk mengambil data dari spreadsheet
+      async function fetchData() {
+        try {
+          // Tampilkan loading state
+          document.getElementById("statsCards").innerHTML = `
+            <div class="loading-container" style="text-align: center; grid-column: 1 / -1;">
+              <div class="loading"></div>
+              <p>Memuat data statistik...</p>
+            </div>
+          `;
+
+          document.getElementById("institutionList").innerHTML = `
+            <div class="loading-container" style="text-align: center; grid-column: 1 / -1;">
+              <div class="loading"></div>
+              <p>Memuat data lembaga pendidikan...</p>
+            </div>
+          `;
+
+          const res = await fetch(scriptUrl);
+
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+
+          const data = await res.json();
+          allData = data;
+
+          // Update UI dengan data yang diterima
+          updateCards(2025);
+          renderChart();
+          renderInstitutions(data.institutions);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+
+          // Tampilkan pesan error
+          document.getElementById("statsCards").innerHTML = `
+            <div class="error-message" style="grid-column: 1 / -1;">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Gagal memuat data statistik: ${error.message}</p>
+              <button onclick="fetchData()" style="margin-top: 10px; padding: 8px 16px; background: #1a5f7a; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Coba Lagi
+              </button>
+            </div>
+          `;
+
+          document.getElementById("institutionList").innerHTML = `
+            <div class="error-message" style="grid-column: 1 / -1;">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Gagal memuat data lembaga pendidikan: ${error.message}</p>
+              <button onclick="fetchData()" style="margin-top: 10px; padding: 8px 16px; background: #1a5f7a; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Coba Lagi
+              </button>
+            </div>
+          `;
+
+          // Gunakan data fallback jika ada error
+          useFallbackData();
+        }
+      }
+
+      // Data fallback jika terjadi error
+      function useFallbackData() {
+        const fallbackData = {
+          stats: [
+            { year: 2022, total: 120, proses: 30, selesai: 90 },
+            { year: 2023, total: 150, proses: 45, selesai: 105 },
+            { year: 2024, total: 200, proses: 60, selesai: 140 },
+            { year: 2025, total: 180, proses: 55, selesai: 125 },
+          ],
+          institutions: [
+            {
+              nama: "Universitas Gadjah Mada",
+              peminat: 45,
+              logo: "https://upload.wikimedia.org/wikipedia/id/thumb/6/6d/Logo_UGM.png/200px-Logo_UGM.png",
+            },
+            {
+              nama: "Institut Teknologi Bandung",
+              peminat: 38,
+              logo: "https://upload.wikimedia.org/wikipedia/id/thumb/9/95/Logo_ITB.png/200px-Logo_ITB.png",
+            },
+            {
+              nama: "Universitas Indonesia",
+              peminat: 35,
+              logo: "https://upload.wikimedia.org/wikipedia/id/thumb/0/0a/Logo_Universitas_Indonesia.png/200px-Logo_Universitas_Indonesia.png",
+            },
+            {
+              nama: "Universitas Padjadjaran",
+              peminat: 32,
+              logo: "https://upload.wikimedia.org/wikipedia/id/thumb/9/9c/Logo_Unpad.png/200px-Logo_Unpad.png",
+            },
+            {
+              nama: "Universitas Pendidikan Indonesia",
+              peminat: 28,
+              logo: "https://upload.wikimedia.org/wikipedia/id/thumb/5/5c/Logo_UPI.png/200px-Logo_UPI.png",
+            },
+            {
+              nama: "Institut Pertanian Bogor",
+              peminat: 25,
+              logo: "https://upload.wikimedia.org/wikipedia/id/thumb/6/6d/Logo_IPB_University.png/200px-Logo_IPB_University.png",
+            },
+          ],
+        };
+
+        allData = fallbackData;
+        updateCards(2025);
+        renderChart();
+        renderInstitutions(fallbackData.institutions);
+
+        // Tampilkan notifikasi bahwa menggunakan data fallback
+        const notification = document.createElement("div");
+        notification.className = "error-message";
+        notification.innerHTML = `
+          <i class="fas fa-info-circle"></i>
+          <p>Menggunakan data contoh karena koneksi ke server terhambat. Data mungkin tidak terbaru.</p>
+        `;
+        document.querySelector(".rekapitulasi-section").prepend(notification);
+      }
+
+      // Fungsi untuk mengubah tahun yang aktif
+      function changeYear(year) {
+        document.querySelectorAll(".year-buttons button").forEach((btn) => {
+          btn.classList.remove("active");
+          if (btn.textContent == year) btn.classList.add("active");
+        });
+        updateCards(year);
+      }
+
+      // Fungsi untuk memperbarui kartu statistik
+      function updateCards(year) {
+        const data = allData.stats?.find((d) => d.year == year);
+        const container = document.getElementById("statsCards");
+        if (!data) {
+          container.innerHTML = `
+            <div class="error-message" style="grid-column: 1 / -1;">
+              <p>Data untuk tahun ${year} tidak tersedia</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="card">
+            <div class="stat-info">
+              <h3>Total Peserta</h3>
+              <p>${data.total}</p>
+            </div>
+            <i class="fas fa-users stat-icon"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Dalam Proses</h3>
+              <p>${data.proses}</p>
+            </div>
+            <i class="fas fa-sync-alt stat-icon"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Selesai</h3>
+              <p>${data.selesai}</p>
+            </div>
+            <i class="fas fa-check-circle stat-icon"></i>
+          </div>
+        `;
+      }
+
+      // Fungsi untuk merender chart
+      function renderChart() {
+        const ctx = document.getElementById("tubelChart").getContext("2d");
+        const labels = ["2022", "2023", "2024", "2025"];
+
+        const totals = labels.map(
+          (y) => allData.stats?.find((d) => d.year == y)?.total || 0
+        );
+        const proses = labels.map(
+          (y) => allData.stats?.find((d) => d.year == y)?.proses || 0
+        );
+        const selesai = labels.map(
+          (y) => allData.stats?.find((d) => d.year == y)?.selesai || 0
+        );
+
+        if (chart) chart.destroy(); // biar gak dobel saat reload chart
+
+        chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Total Peserta",
+                data: totals,
+                borderColor: "#e76f51",
+                backgroundColor: "rgba(231, 111, 81, 0.1)",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "Dalam Proses",
+                data: proses,
+                borderColor: "#2a9d8f",
+                backgroundColor: "rgba(42, 157, 143, 0.1)",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "Selesai",
+                data: selesai,
+                borderColor: "#f4a261",
+                backgroundColor: "rgba(244, 162, 97, 0.1)",
+                tension: 0.3,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true, position: "top" },
+              title: {
+                display: true,
+                text: "Tren Peserta Tugas Belajar (2022–2025)",
+              },
+            },
+            scales: {
+              y: { beginAtZero: true },
+            },
+          },
+        });
+      }
+
+      // Fungsi untuk merender daftar lembaga pendidikan
+      function renderInstitutions(institutions) {
+        if (!institutions || institutions.length === 0) {
+          const container = document.getElementById("institutionList");
+          container.innerHTML = `
+            <div class="no-data" style="grid-column: 1 / -1;">
+              <i class="fas fa-university"></i>
+              <p>Data lembaga pendidikan tidak tersedia</p>
+            </div>
+          `;
+          return;
+        }
+
+        const sorted = institutions.sort((a, b) => b.peminat - a.peminat);
+        const container = document.getElementById("institutionList");
+        container.innerHTML = sorted
+          .map(
+            (inst) => `
+          <div class="institution-card">
+            <img src="${
+              inst.logo || "https://via.placeholder.com/60"
+            }" class="institution-logo" />
+            <div class="institution-info">
+              <h4>${inst.nama}</h4>
+              <p>${inst.peminat} Peminat</p>
+            </div>
+          </div>`
+          )
+          .join("");
+      }
+
+      // Fungsi untuk animasi alur interaktif baru
+      function animateInteractiveFlow() {
+        const steps = document.querySelectorAll(".interactive-flow-step");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+              } else {
+                entry.target.classList.remove("visible");
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        steps.forEach((step) => observer.observe(step));
+      }
+
+      // Fungsi untuk interaksi dokumen hukum
+      function setupLegalDocsInteractions() {
+        const docCards = document.querySelectorAll(".doc-card");
+        docCards.forEach((card) => {
+          card.addEventListener("click", function () {
+            const fileName = this.getAttribute("data-file");
+            alert(
+              `Fitur ini akan mengarahkan ke halaman/link unduh dokumen: ${fileName}.`
+            );
+          });
+        });
+      }
+
+      // Fungsi login
+      function checkLoginStatus() {
+        const userDisplay = document.getElementById("user-display");
+        const userInfo = document.getElementById("user-info");
+        const userDropdown = document.getElementById("user-dropdown");
+        const logoutBtn = document.getElementById("logout-btn");
+
+        const loginData = localStorage.getItem("loginData");
+        if (loginData) {
+          const userData = JSON.parse(loginData);
+          userDisplay.textContent = userData.name;
+
+          userInfo.addEventListener("click", function (e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle("active");
+          });
+
+          document.addEventListener("click", function () {
+            userDropdown.classList.remove("active");
+          });
+
+          logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("loginData");
+            alert("Anda telah logout.");
+            window.location.reload();
+          });
+        } else {
+          userDisplay.textContent = "Guest";
+        }
+      }
+
+      // Initialize dashboard
+      function initializeDashboard() {
+        console.log("🚀 Memulai dashboard...");
+
+        // Ambil data dari spreadsheet
+        fetchData();
+
+        // Setup other functionalities
+        animateInteractiveFlow();
+        setupLegalDocsInteractions();
+        checkLoginStatus();
+
+        console.log("✅ Dashboard berhasil diinisialisasi");
+      }
+
+      // Start when page loads
+      document.addEventListener("DOMContentLoaded", initializeDashboard);
+    </script>
+  </body>
+</html>
