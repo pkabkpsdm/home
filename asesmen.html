@@ -936,46 +936,77 @@
         </div>
     </footer>
 
-    <script>
+  <script>
         // ===== KODE UNTUK TAB NAVIGASI =====
         document.addEventListener('DOMContentLoaded', function() {
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
             const detailedDataBtn = document.getElementById('detailed-data-btn');
 
+            // Status untuk melacak apakah sedang di dashboard
+            let isOnDashboard = false;
+
             // Fungsi untuk mengganti tab
             function switchTab(tabId) {
+                // Reset status dashboard
+                isOnDashboard = false;
+                
                 // Sembunyikan semua konten tab
                 tabContents.forEach(content => {
                     content.classList.add('hidden');
                 });
+                
                 // Tampilkan konten tab yang dipilih
                 document.getElementById(tabId).classList.remove('hidden');
                 
-                // PERBAIKAN 1: Atur tombol "Data Selengkapnya" hanya muncul di tab Data Asesmen PNS
-                if (tabId === 'data-tab') {
-                    detailedDataBtn.classList.remove('hidden');
-                    detailedDataBtn.innerHTML = '<i class="fas fa-chart-bar"></i> Lihat Dashboard Lengkap';
-                } else {
-                    // Sembunyikan tombol di tab Pengenalan dan Dashboard Lengkap
-                    detailedDataBtn.classList.add('hidden');
-                }
-                
-                // PERBAIKAN 2: Tidak mengaktifkan tombol tab untuk dashboard lengkap (karena tidak ada tab-nya)
-                // Hanya aktifkan tombol tab untuk intro-tab dan data-tab
+                // Perbarui status tombol tab
                 tabButtons.forEach(button => {
-                    const buttonTabId = button.getAttribute('data-tab');
-                    if (buttonTabId === tabId) {
+                    if (button.getAttribute('data-tab') === tabId) {
                         button.classList.add('active');
                     } else {
                         button.classList.remove('active');
                     }
                 });
                 
+                // PERBAIKAN: Atur tombol "Data Selengkapnya" berdasarkan tab aktif
+                updateDetailedDataButton();
+                
                 // Jika berpindah ke tab data, muat ulang datanya
                 if (tabId === 'data-tab') {
                     loadAssessmentData();
                 }
+            }
+
+            // Fungsi untuk memperbarui tampilan tombol "Data Selengkapnya"
+            function updateDetailedDataButton() {
+                if (isOnDashboard) {
+                    // Jika sedang di dashboard, tombol dengan teks "Kembali ke Data Ringkasan"
+                    detailedDataBtn.classList.remove('hidden');
+                    detailedDataBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Kembali ke Data Ringkasan';
+                } else {
+                    // Periksa tab mana yang aktif
+                    const activeTabId = getActiveTabId();
+                    
+                    if (activeTabId === 'data-tab') {
+                        // Jika di tab Data Asesmen PNS, tampilkan tombol "Lihat Dashboard Lengkap"
+                        detailedDataBtn.classList.remove('hidden');
+                        detailedDataBtn.innerHTML = '<i class="fas fa-chart-bar"></i> Lihat Dashboard Lengkap';
+                    } else {
+                        // Jika di tab lain (Pengenalan), sembunyikan tombol
+                        detailedDataBtn.classList.add('hidden');
+                    }
+                }
+            }
+
+            // Fungsi untuk mendapatkan ID tab yang aktif
+            function getActiveTabId() {
+                let activeTabId = null;
+                tabContents.forEach(content => {
+                    if (!content.classList.contains('hidden')) {
+                        activeTabId = content.id;
+                    }
+                });
+                return activeTabId;
             }
 
             // Tambahkan event listener ke setiap tombol tab
@@ -986,8 +1017,11 @@
                 });
             });
 
-            // PERBAIKAN 2: Fungsi untuk tombol "Data Selengkapnya" yang benar
-            detailedDataBtn.addEventListener('click', function() {
+            // Fungsi untuk menampilkan dashboard
+            function showDashboard() {
+                // Set status bahwa sedang di dashboard
+                isOnDashboard = true;
+                
                 // Sembunyikan semua konten tab
                 tabContents.forEach(content => {
                     content.classList.add('hidden');
@@ -996,29 +1030,30 @@
                 // Tampilkan dashboard lengkap
                 document.getElementById('full-dashboard-tab').classList.remove('hidden');
                 
-                // Ubah teks tombol menjadi "Kembali ke Data Ringkasan"
-                detailedDataBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Kembali ke Data Ringkasan';
-                
-                // Tetap tampilkan tombol di dashboard lengkap
-                detailedDataBtn.classList.remove('hidden');
-                
-                // Nonaktifkan semua tombol tab (karena dashboard bukan bagian dari tab)
+                // Nonaktifkan semua tombol tab
                 tabButtons.forEach(button => {
                     button.classList.remove('active');
                 });
                 
-                // Tambahkan event listener baru untuk tombol yang sudah diubah
-                // Hapus event listener sebelumnya untuk menghindari duplikasi
-                detailedDataBtn.replaceWith(detailedDataBtn.cloneNode(true));
-                
-                // Dapatkan tombol yang baru
-                const newDetailedDataBtn = document.getElementById('detailed-data-btn');
-                
-                // Tambahkan event listener baru
-                newDetailedDataBtn.addEventListener('click', function() {
-                    // Kembali ke tab Data Asesmen PNS
-                    switchTab('data-tab');
-                });
+                // Update tampilan tombol
+                updateDetailedDataButton();
+            }
+
+            // Fungsi untuk kembali dari dashboard ke tab data
+            function backToDataTab() {
+                // Kembali ke tab data
+                switchTab('data-tab');
+            }
+
+            // Event listener untuk tombol "Data Selengkapnya"
+            detailedDataBtn.addEventListener('click', function() {
+                if (isOnDashboard) {
+                    // Jika sedang di dashboard, kembali ke tab data
+                    backToDataTab();
+                } else {
+                    // Jika sedang di tab data, buka dashboard
+                    showDashboard();
+                }
             });
 
             // ===== KODE UNTUK MEMUAT DATA DARI GOOGLE SHEETS =====
