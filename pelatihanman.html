@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Pelatihan Manajerial - SINGGATERA</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* --- Gaya Global dan Reset --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        background-color: #f4f6f9;
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* --- Header dan Navigasi --- */
+      .header-container {
+        background: linear-gradient(90deg, #1a5f7a 0%, #2a9d8f 100%);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .logo-section h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+      }
+      .logo-section p {
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+      .user-info:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .user-info i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+
+      /* --- User Dropdown --- */
+      .user-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        color: #333;
+        border-radius: 5px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 200px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+      }
+      .user-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .dropdown-header {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      .dropdown-header h4 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
+        color: #1a5f7a;
+      }
+      .dropdown-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #666;
+      }
+      .dropdown-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+      .dropdown-item:hover {
+        background-color: #f0f0f0;
+      }
+
+      /* --- Tata Letak Utama --- */
+      .main-content {
+        padding: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* --- back to home --- */
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #1a5f7a;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        margin-bottom: 30px;
+        transition: background 0.3s;
+      }
+
+      .back-button:hover {
+        background: #144b61;
+      }
+
+      /* --- Section Title --- */
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a5f7a;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #2a9d8f;
+        padding-bottom: 10px;
+      }
+
+      /* --- Kartu Statistik --- */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+      }
+      .card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        margin: 0 0 5px 0;
+        font-size: 1rem;
+        color: #777;
+        font-weight: 500;
+      }
+      .card p {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      .card i {
+        font-size: 2.5rem;
+        opacity: 0.6;
+      }
+
+      /* Warna khusus untuk statistik */
+      .card:nth-child(1) i,
+      .card:nth-child(1) p { color: #e76f51; }
+      .card:nth-child(2) i,
+      .card:nth-child(2) p { color: #2a9d8f; }
+      .card:nth-child(3) i,
+      .card:nth-child(3) p { color: #f4a261; }
+      .card:nth-child(4) i,
+      .card:nth-child(4) p { color: #9b59b6; }
+      .card:nth-child(5) i,
+      .card:nth-child(5) p { color: #3498db; }
+      .card:nth-child(6) i,
+      .card:nth-child(6) p { color: #e74c3c; }
+      .card:nth-child(7) i,
+      .card:nth-child(7) p { color: #27ae60; }
+
+      /* --- Area Chart --- */
+      .chart-container {
+        background-color: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 40px;
+        height: 450px;
+        position: relative;
+      }
+
+      /* --- Filter Eselon --- */
+      .filter-section {
+        background-color: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .filter-btn {
+        padding: 12px 20px;
+        border: 2px solid #1a5f7a;
+        background-color: white;
+        color: #1a5f7a;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+      }
+
+      .filter-btn:hover {
+        background-color: #f0f7f8;
+      }
+
+      .filter-btn.active {
+        background-color: #1a5f7a;
+        color: white;
+        box-shadow: 0 4px 8px rgba(26, 95, 122, 0.4);
+      }
+
+      /* --- Tabel Data Eselon --- */
+      .data-table-section {
+        margin-top: 40px;
+      }
+
+      .data-table-container {
+        overflow-x: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        min-width: 1100px;
+      }
+
+      .data-table thead {
+        background: linear-gradient(90deg, #1a5f7a 0%, #2a9d8f 100%);
+        color: white;
+      }
+
+      .data-table th {
+        padding: 18px 12px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .data-table th:last-child {
+        border-right: none;
+      }
+
+      .data-table tbody tr {
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.2s;
+      }
+
+      .data-table tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      .data-table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .data-table tbody tr:nth-child(even):hover {
+        background-color: #e9ecef;
+      }
+
+      .data-table td {
+        padding: 16px 12px;
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      .data-table td:first-child {
+        font-weight: 600;
+        color: #1a5f7a;
+        background-color: #f0f7f8;
+      }
+
+      /* Highlight untuk persentase */
+      .percentage-high {
+        color: #27ae60;
+        font-weight: 600;
+      }
+
+      .percentage-medium {
+        color: #f39c12;
+        font-weight: 600;
+      }
+
+      .percentage-low {
+        color: #e74c3c;
+        font-weight: 600;
+      }
+
+      /* --- Card Laporan Ringkasan --- */
+      .summary-card {
+        background: linear-gradient(135deg, #1a5f7a 0%, #2a9d8f 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 8px 25px rgba(26, 95, 122, 0.2);
+      }
+
+      .summary-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .summary-item {
+        text-align: center;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: transform 0.3s;
+      }
+
+      .summary-item:hover {
+        transform: translateY(-5px);
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .summary-item h4 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        opacity: 0.9;
+      }
+
+      .summary-item p {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      /* --- Progress Bar --- */
+      .progress-section {
+        background-color: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin: 40px 0;
+      }
+
+      .progress-item {
+        margin-bottom: 25px;
+      }
+
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .progress-label {
+        font-weight: 600;
+        color: #1a5f7a;
+      }
+
+      .progress-percentage {
+        font-weight: 600;
+        color: #2a9d8f;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background-color: #ecf0f1;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #2a9d8f 0%, #1a5f7a 100%);
+        border-radius: 6px;
+        transition: width 1s ease-out;
+      }
+
+      /* --- Footer --- */
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #34495e;
+        color: #ecf0f1;
+        font-size: 0.85rem;
+        margin-top: 40px;
+      }
+
+      /* --- Loading & Error States --- */
+      .loading-container {
+        text-align: center;
+        padding: 40px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .loading {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #1a5f7a;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .error-message {
+        background-color: #ffeaa7;
+        border: 1px solid #fdcb6e;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        color: #e17055;
+        text-align: center;
+      }
+
+      .error-message i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      /* --- Responsiveness --- */
+      @media (max-width: 1200px) {
+        .data-table {
+          min-width: 1000px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header-container {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 10px 20px;
+        }
+        .user-info {
+          margin-top: 10px;
+        }
+        .main-content {
+          padding: 20px;
+        }
+        .cards {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        .card p {
+          font-size: 1.8rem;
+        }
+        .card i {
+          font-size: 2rem;
+        }
+        .chart-container {
+          height: 350px;
+        }
+        .summary-grid {
+          grid-template-columns: 1fr;
+        }
+        .filter-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 1.5rem;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .chart-container {
+          height: 300px;
+          padding: 15px;
+        }
+        .summary-card {
+          padding: 20px;
+        }
+        .summary-item p {
+          font-size: 1.5rem;
+        }
+        .filter-grid {
+          grid-template-columns: 1fr;
+        }
+        .filter-btn {
+          padding: 10px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="logo-section">
+        <h1>Dashboard Pelatihan Manajerial</h1>
+        <p>Bidang PKA BKPSDM Kabupaten Ciamis</p>
+      </div>
+      <div class="user-info" id="user-info">
+        <i class="fas fa-user-circle"></i>
+        <span id="user-display">Guest</span>
+        <div class="user-dropdown" id="user-dropdown">
+          <div class="dropdown-header">
+            <h4 id="dropdown-name">Nama Pengguna</h4>
+            <p id="dropdown-username">username@domain.com</p>
+          </div>
+          <div class="dropdown-item" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Kembali ke Home
+      </a>
+
+      <h2 class="section-title">Dashboard Pelatihan Manajerial</h2>
+
+      <!-- Filter Eselon -->
+      <div class="filter-section" id="filterSection">
+        <h3 style="color: #1a5f7a; margin-bottom: 15px;">Filter Data:</h3>
+        <div class="filter-grid" id="filterButtons">
+          <!-- Filter buttons akan diisi oleh JavaScript -->
+        </div>
+      </div>
+
+      <!-- Kartu Statistik Utama -->
+      <div class="cards" id="statsCards">
+        <div class="loading-container">
+          <div class="loading"></div>
+          <p>Memuat data statistik...</p>
+        </div>
+      </div>
+
+      <!-- Laporan Ringkasan -->
+      <div class="summary-card" id="summaryCard">
+        <h3><i class="fas fa-chart-line"></i> Ringkasan Pelatihan Manajerial</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <h4>Total Pegawai</h4>
+            <p id="total-pegawai">0</p>
+          </div>
+          <div class="summary-item">
+            <h4>Total Sudah Diklat</h4>
+            <p id="total-sudah">0</p>
+          </div>
+          <div class="summary-item">
+            <h4>Total Belum Diklat</h4>
+            <p id="total-belum">0</p>
+          </div>
+          <div class="summary-item">
+            <h4>Persentase Selesai</h4>
+            <p id="persentase">0%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Ringkasan -->
+      <div class="chart-container">
+        <canvas id="pelatihanChart"></canvas>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <h3 style="color: #1a5f7a; margin-bottom: 20px;">Progress Pelatihan per Eselon</h3>
+        <div id="progressBars"></div>
+      </div>
+
+      <!-- Tabel Data Lengkap -->
+      <section class="data-table-section">
+        <h3 class="section-title">Data Detail Pelatihan per Eselon</h3>
+        <div class="data-table-container">
+          <table class="data-table" id="eselonTable">
+            <thead>
+              <tr>
+                <th>ESELON</th>
+                <th>JUMLAH PEGAWAI</th>
+                <th>JABATAN TERISI</th>
+                <th>JABATAN KOSONG</th>
+                <th>DIKLATPIM IV</th>
+                <th>DIKLATPIM III</th>
+                <th>DIKLATPIM II</th>
+                <th>PRAJABATAN</th>
+                <th>ADUM</th>
+                <th>BELUM DIKLAT</th>
+                <th>SUDAH DIKLAT</th>
+                <th>% SELESAI</th>
+              </tr>
+            </thead>
+            <tbody id="eselonTableBody">
+              <tr>
+                <td colspan="12" style="text-align: center; padding: 40px;">
+                  <div class="loading"></div>
+                  <p>Memuat data...</p>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot id="eselonTableFooter">
+              <!-- Footer akan diisi oleh JavaScript -->
+            </tfoot>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2025 Bidang Pengembangan Kompetensi Aparatur - BKPSDM Kabupaten Ciamis
+    </footer>
+
+    <script>
+      // URL Google Apps Script untuk mengambil data dari spreadsheet
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbwUMWroKOsQictlBluophZv48ccQDutoxEHgKuw5TiEH2Gv1oGDW65pGFCwAzkQmDycyA/exec";
+
+      let pelatihanData = {};
+      let currentFilter = 'all';
+      let chart;
+
+      // Fungsi untuk mengambil data dari spreadsheet
+      async function fetchPelatihanData() {
+        try {
+          // Tampilkan loading state
+          document.getElementById("statsCards").innerHTML = `
+            <div class="loading-container">
+              <div class="loading"></div>
+              <p>Memuat data statistik...</p>
+            </div>
+          `;
+
+          document.getElementById("eselonTableBody").innerHTML = `
+            <tr>
+              <td colspan="12" style="text-align: center; padding: 40px;">
+                <div class="loading"></div>
+                <p>Memuat data...</p>
+              </td>
+            </tr>
+          `;
+
+          const res = await fetch(scriptUrl);
+
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+
+          const data = await res.json();
+          pelatihanData = data;
+
+          // Update UI dengan data yang diterima
+          if (data.success) {
+            updateFilterButtons(data.data);
+            updateStatsCards(data.totals);
+            renderSummary(data.totals);
+            renderProgressBars(data.data);
+            renderEselonTable(data.data, data.totals);
+            renderChart(data.data);
+          } else {
+            throw new Error(data.error || 'Gagal mengambil data');
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+
+          // Tampilkan pesan error
+          document.getElementById("statsCards").innerHTML = `
+            <div class="error-message">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Gagal memuat data statistik: ${error.message}</p>
+              <button onclick="fetchPelatihanData()" style="margin-top: 10px; padding: 8px 16px; background: #1a5f7a; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Coba Lagi
+              </button>
+            </div>
+          `;
+
+          // Gunakan data fallback jika ada error
+          useFallbackData();
+        }
+      }
+
+      // Data fallback jika terjadi error
+      function useFallbackData() {
+        const fallbackData = {
+          success: true,
+          data: [
+            {
+              eselon: "II",
+              jumlah_pegawai: 50,
+              jabatan_terisi: 45,
+              jabatan_kosong: 5,
+              diklatpim_iv: 10,
+              diklatpim_iii: 15,
+              diklatpim_ii: 5,
+              prajabatan: 5,
+              adum: 5,
+              belum_diklat: 10,
+              sudah_diklat: 40
+            },
+            {
+              eselon: "III",
+              jumlah_pegawai: 120,
+              jabatan_terisi: 110,
+              jabatan_kosong: 10,
+              diklatpim_iv: 20,
+              diklatpim_iii: 30,
+              diklatpim_ii: 15,
+              prajabatan: 10,
+              adum: 10,
+              belum_diklat: 25,
+              sudah_diklat: 95
+            },
+            {
+              eselon: "IV",
+              jumlah_pegawai: 200,
+              jabatan_terisi: 185,
+              jabatan_kosong: 15,
+              diklatpim_iv: 30,
+              diklatpim_iii: 40,
+              diklatpim_ii: 20,
+              prajabatan: 15,
+              adum: 15,
+              belum_diklat: 50,
+              sudah_diklat: 150
+            },
+            {
+              eselon: "V",
+              jumlah_pegawai: 350,
+              jabatan_terisi: 330,
+              jabatan_kosong: 20,
+              diklatpim_iv: 50,
+              diklatpim_iii: 70,
+              diklatpim_ii: 30,
+              prajabatan: 20,
+              adum: 20,
+              belum_diklat: 70,
+              sudah_diklat: 280
+            }
+          ],
+          totals: {
+            total_pegawai: 720,
+            total_sudah_diklat: 565,
+            total_belum_diklat: 155,
+            total_diklatpim_iv: 110,
+            total_diklatpim_iii: 155,
+            total_diklatpim_ii: 70,
+            total_prajabatan: 50,
+            total_adum: 50,
+            total_jabatan_terisi: 670,
+            total_jabatan_kosong: 50
+          }
+        };
+
+        // Hitung persentase untuk fallback
+        fallbackData.totals.persen_sudah_diklat = ((fallbackData.totals.total_sudah_diklat / fallbackData.totals.total_pegawai) * 100).toFixed(1);
+        fallbackData.totals.persen_belum_diklat = ((fallbackData.totals.total_belum_diklat / fallbackData.totals.total_pegawai) * 100).toFixed(1);
+
+        pelatihanData = fallbackData;
+        updateFilterButtons(fallbackData.data);
+        updateStatsCards(fallbackData.totals);
+        renderSummary(fallbackData.totals);
+        renderProgressBars(fallbackData.data);
+        renderEselonTable(fallbackData.data, fallbackData.totals);
+        renderChart(fallbackData.data);
+
+        // Tampilkan notifikasi bahwa menggunakan data fallback
+        const notification = document.createElement("div");
+        notification.className = "error-message";
+        notification.style.marginTop = "20px";
+        notification.innerHTML = `
+          <i class="fas fa-info-circle"></i>
+          <p>Menggunakan data contoh karena koneksi ke server terhambat. Data mungkin tidak terbaru.</p>
+        `;
+        document.querySelector(".main-content").prepend(notification);
+      }
+
+      // Fungsi untuk membuat filter buttons
+      function updateFilterButtons(data) {
+        const container = document.getElementById("filterButtons");
+        
+        // Ekstrak semua eselon unik
+        const eselonList = [...new Set(data.map(item => item.eselon))].sort();
+        
+        const buttonsHTML = `
+          <button class="filter-btn active" onclick="filterData('all')">
+            Semua Eselon
+          </button>
+          ${eselonList.map(eselon => `
+            <button class="filter-btn" onclick="filterData('${eselon}')">
+              Eselon ${eselon}
+            </button>
+          `).join('')}
+        `;
+        
+        container.innerHTML = buttonsHTML;
+      }
+
+      // Fungsi untuk filter data berdasarkan eselon
+      function filterData(eselon) {
+        currentFilter = eselon;
+        
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`button[onclick="filterData('${eselon}')"]`).classList.add('active');
+        
+        // Filter data yang akan ditampilkan
+        let filteredData = pelatihanData.data;
+        let filteredTotals = pelatihanData.totals;
+        
+        if (eselon !== 'all') {
+          filteredData = pelatihanData.data.filter(item => item.eselon === eselon);
+          
+          // Hitung ulang totals untuk filtered data
+          filteredTotals = {
+            total_pegawai: filteredData.reduce((sum, item) => sum + item.jumlah_pegawai, 0),
+            total_sudah_diklat: filteredData.reduce((sum, item) => sum + item.sudah_diklat, 0),
+            total_belum_diklat: filteredData.reduce((sum, item) => sum + item.belum_diklat, 0),
+            total_diklatpim_iv: filteredData.reduce((sum, item) => sum + item.diklatpim_iv, 0),
+            total_diklatpim_iii: filteredData.reduce((sum, item) => sum + item.diklatpim_iii, 0),
+            total_diklatpim_ii: filteredData.reduce((sum, item) => sum + item.diklatpim_ii, 0),
+            total_prajabatan: filteredData.reduce((sum, item) => sum + item.prajabatan, 0),
+            total_adum: filteredData.reduce((sum, item) => sum + item.adum, 0),
+            total_jabatan_terisi: filteredData.reduce((sum, item) => sum + item.jabatan_terisi, 0),
+            total_jabatan_kosong: filteredData.reduce((sum, item) => sum + item.jabatan_kosong, 0)
+          };
+          
+          // Hitung persentase untuk filtered data
+          filteredTotals.persen_sudah_diklat = filteredTotals.total_pegawai > 0 ? 
+            ((filteredTotals.total_sudah_diklat / filteredTotals.total_pegawai) * 100).toFixed(1) : 0;
+          filteredTotals.persen_belum_diklat = filteredTotals.total_pegawai > 0 ? 
+            ((filteredTotals.total_belum_diklat / filteredTotals.total_pegawai) * 100).toFixed(1) : 0;
+        }
+        
+        // Update UI dengan data filtered
+        updateStatsCards(filteredTotals);
+        renderSummary(filteredTotals);
+        renderProgressBars(filteredData);
+        renderEselonTable(filteredData, filteredTotals);
+        renderChart(filteredData);
+      }
+
+      // Fungsi untuk memperbarui kartu statistik
+      function updateStatsCards(totals) {
+        const container = document.getElementById("statsCards");
+        
+        container.innerHTML = `
+          <div class="card">
+            <div class="stat-info">
+              <h3>Total Pegawai</h3>
+              <p>${totals.total_pegawai.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Sudah Diklat</h3>
+              <p>${totals.total_sudah_diklat.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Belum Diklat</h3>
+              <p>${totals.total_belum_diklat.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Diklatpim IV</h3>
+              <p>${totals.total_diklatpim_iv.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Diklatpim III</h3>
+              <p>${totals.total_diklatpim_iii.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-user-cog"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Diklatpim II</h3>
+              <p>${totals.total_diklatpim_ii.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div class="card">
+            <div class="stat-info">
+              <h3>Prajabatan</h3>
+              <p>${totals.total_prajabatan.toLocaleString('id-ID')}</p>
+            </div>
+            <i class="fas fa-user-graduate"></i>
+          </div>
+        `;
+      }
+
+      // Fungsi untuk merender ringkasan
+      function renderSummary(totals) {
+        document.getElementById("total-pegawai").textContent = totals.total_pegawai.toLocaleString('id-ID');
+        document.getElementById("total-sudah").textContent = totals.total_sudah_diklat.toLocaleString('id-ID');
+        document.getElementById("total-belum").textContent = totals.total_belum_diklat.toLocaleString('id-ID');
+        document.getElementById("persentase").textContent = `${totals.persen_sudah_diklat}%`;
+      }
+
+      // Fungsi untuk merender progress bars
+      function renderProgressBars(data) {
+        const container = document.getElementById("progressBars");
+        
+        const progressHTML = data.map(item => {
+          const totalPegawai = item.jumlah_pegawai;
+          const sudahDiklat = item.sudah_diklat;
+          const percentage = totalPegawai > 0 ? Math.round((sudahDiklat / totalPegawai) * 100) : 0;
+          
+          // Tentukan class berdasarkan persentase
+          let percentageClass = 'percentage-medium';
+          if (percentage >= 80) percentageClass = 'percentage-high';
+          if (percentage < 50) percentageClass = 'percentage-low';
+          
+          return `
+            <div class="progress-item">
+              <div class="progress-header">
+                <span class="progress-label">Eselon ${item.eselon}</span>
+                <span class="progress-percentage ${percentageClass}">${percentage}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        container.innerHTML = progressHTML;
+      }
+
+      // Fungsi untuk merender tabel eselon
+      function renderEselonTable(data, totals) {
+        const tbody = document.getElementById("eselonTableBody");
+        const tfoot = document.getElementById("eselonTableFooter");
+        
+        // Render baris data
+        const rowsHTML = data.map(item => {
+          const totalPegawai = item.jumlah_pegawai;
+          const sudahDiklat = item.sudah_diklat;
+          const percentage = totalPegawai > 0 ? ((sudahDiklat / totalPegawai) * 100).toFixed(1) : 0;
+          
+          // Tentukan class untuk persentase
+          let percentageClass = 'percentage-medium';
+          const percNum = parseFloat(percentage);
+          if (percNum >= 80) percentageClass = 'percentage-high';
+          if (percNum < 50) percentageClass = 'percentage-low';
+          
+          return `
+            <tr>
+              <td>Eselon ${item.eselon}</td>
+              <td>${item.jumlah_pegawai.toLocaleString('id-ID')}</td>
+              <td>${item.jabatan_terisi.toLocaleString('id-ID')}</td>
+              <td>${item.jabatan_kosong.toLocaleString('id-ID')}</td>
+              <td>${item.diklatpim_iv.toLocaleString('id-ID')}</td>
+              <td>${item.diklatpim_iii.toLocaleString('id-ID')}</td>
+              <td>${item.diklatpim_ii.toLocaleString('id-ID')}</td>
+              <td>${item.prajabatan.toLocaleString('id-ID')}</td>
+              <td>${item.adum.toLocaleString('id-ID')}</td>
+              <td>${item.belum_diklat.toLocaleString('id-ID')}</td>
+              <td>${item.sudah_diklat.toLocaleString('id-ID')}</td>
+              <td class="${percentageClass}"><strong>${percentage}%</strong></td>
+            </tr>
+          `;
+        }).join('');
+        
+        tbody.innerHTML = rowsHTML;
+        
+        // Render footer dengan total
+        const footerHTML = `
+          <tr style="background-color: #f0f7f8; font-weight: bold;">
+            <td>TOTAL</td>
+            <td>${totals.total_pegawai.toLocaleString('id-ID')}</td>
+            <td>${totals.total_jabatan_terisi.toLocaleString('id-ID')}</td>
+            <td>${totals.total_jabatan_kosong.toLocaleString('id-ID')}</td>
+            <td>${totals.total_diklatpim_iv.toLocaleString('id-ID')}</td>
+            <td>${totals.total_diklatpim_iii.toLocaleString('id-ID')}</td>
+            <td>${totals.total_diklatpim_ii.toLocaleString('id-ID')}</td>
+            <td>${totals.total_prajabatan.toLocaleString('id-ID')}</td>
+            <td>${totals.total_adum.toLocaleString('id-ID')}</td>
+            <td>${totals.total_belum_diklat.toLocaleString('id-ID')}</td>
+            <td>${totals.total_sudah_diklat.toLocaleString('id-ID')}</td>
+            <td class="percentage-high">${totals.persen_sudah_diklat}%</td>
+          </tr>
+        `;
+        
+        tfoot.innerHTML = footerHTML;
+      }
+
+      // Fungsi untuk merender chart
+      function renderChart(data) {
+        const ctx = document.getElementById("pelatihanChart").getContext("2d");
+        
+        // Siapkan data untuk chart
+        const labels = data.map(item => `Eselon ${item.eselon}`);
+        const diklatpimIV = data.map(item => item.diklatpim_iv);
+        const diklatpimIII = data.map(item => item.diklatpim_iii);
+        const diklatpimII = data.map(item => item.diklatpim_ii);
+        const prajabatan = data.map(item => item.prajabatan);
+        const adum = data.map(item => item.adum);
+        const belumDiklat = data.map(item => item.belum_diklat);
+
+        if (chart) chart.destroy(); // Destroy chart sebelumnya jika ada
+
+        chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Diklatpim IV',
+                data: diklatpimIV,
+                backgroundColor: 'rgba(231, 111, 81, 0.8)',
+                borderColor: 'rgba(231, 111, 81, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'Diklatpim III',
+                data: diklatpimIII,
+                backgroundColor: 'rgba(42, 157, 143, 0.8)',
+                borderColor: 'rgba(42, 157, 143, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'Diklatpim II',
+                data: diklatpimII,
+                backgroundColor: 'rgba(244, 162, 97, 0.8)',
+                borderColor: 'rgba(244, 162, 97, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'Prajabatan',
+                data: prajabatan,
+                backgroundColor: 'rgba(155, 89, 182, 0.8)',
+                borderColor: 'rgba(155, 89, 182, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'ADUM',
+                data: adum,
+                backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                borderColor: 'rgba(52, 152, 219, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'Belum Diklat',
+                data: belumDiklat,
+                backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                borderColor: 'rgba(231, 76, 60, 1)',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Distribusi Jenis Pelatihan per Eselon'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Jumlah Pegawai'
+                },
+                stacked: false
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Eselon'
+                },
+                stacked: false
+              }
+            }
+          }
+        });
+      }
+
+      // Fungsi login
+      function checkLoginStatus() {
+        const userDisplay = document.getElementById("user-display");
+        const userInfo = document.getElementById("user-info");
+        const userDropdown = document.getElementById("user-dropdown");
+        const logoutBtn = document.getElementById("logout-btn");
+
+        const loginData = localStorage.getItem("loginData");
+        if (loginData) {
+          const userData = JSON.parse(loginData);
+          userDisplay.textContent = userData.name;
+
+          userInfo.addEventListener("click", function (e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle("active");
+          });
+
+          document.addEventListener("click", function () {
+            userDropdown.classList.remove("active");
+          });
+
+          logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("loginData");
+            alert("Anda telah logout.");
+            window.location.reload();
+          });
+        } else {
+          userDisplay.textContent = "Guest";
+        }
+      }
+
+      // Initialize dashboard
+      function initializeDashboard() {
+        console.log("🚀 Memulai dashboard pelatihan manajerial...");
+
+        // Ambil data dari spreadsheet
+        fetchPelatihanData();
+
+        // Setup login functionality
+        checkLoginStatus();
+
+        console.log("✅ Dashboard pelatihan manajerial berhasil diinisialisasi");
+      }
+
+      // Start when page loads
+      document.addEventListener("DOMContentLoaded", initializeDashboard);
+
+      // Auto refresh data setiap 5 menit
+      setInterval(fetchPelatihanData, 300000);
+    </script>
+  </body>
+</html>
