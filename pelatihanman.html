@@ -4,409 +4,542 @@
     <base target="_top" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard Pelatihan Manajerial - SINGGATERA</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <title>Dashboard Pelatihan Struktural - SINGGATERA</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      /* --- Gaya Global dan Reset --- */
+      :root {
+        --primary: #2c3e50;
+        --secondary: #17a3d1;
+        --accent: #e74c3c;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --light: #ecf0f1;
+        --dark: #2c3e50;
+        --gradient-primary: linear-gradient(135deg, #949494 0%, #5e5f63 100%);
+        --gradient-secondary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-green: linear-gradient(135deg, #2a9d8f 0%, #1a5f7a 100%);
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --radius: 15px;
+      }
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
+
       body {
-        background-color: #f4f6f9;
+        background-color: #f8f9fa;
         color: #333;
         line-height: 1.6;
         min-height: 100vh;
       }
 
-      /* --- Header dan Navigasi --- */
-      .header-container {
-        background: linear-gradient(90deg, #1a5f7a 0%, #2a9d8f 100%);
-        color: white;
-        padding: 15px 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      /* Header Modern */
+      .modern-header {
+        background: var(--gradient-primary);
+        padding: 15px 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         position: sticky;
         top: 0;
         z-index: 1000;
       }
-      .logo-section h1 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0;
-      }
-      .logo-section p {
-        font-size: 0.8rem;
-        opacity: 0.8;
-      }
-      .user-info {
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        cursor: pointer;
-        position: relative;
-        padding: 5px 10px;
-        border-radius: 5px;
-        transition: background 0.3s;
-      }
-      .user-info:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-      .user-info i {
-        margin-right: 10px;
-        font-size: 1.2rem;
+        padding: 0 30px;
       }
 
-      /* --- User Dropdown --- */
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo-section img {
+        height: 50px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      }
+
+      .logo-text h1 {
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        margin-bottom: 5px;
+      }
+
+      .logo-text p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+      }
+
+      .modern-nav {
+        display: flex;
+        gap: 25px;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 8px 15px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-link:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .nav-link.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .search-box {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 25px;
+        padding: 8px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        backdrop-filter: blur(10px);
+      }
+
+      .search-box input {
+        background: transparent;
+        border: none;
+        color: white;
+        width: 180px;
+        outline: none;
+        font-size: 14px;
+      }
+
+      .search-box input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .search-box i {
+        color: white;
+        opacity: 0.8;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 15px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .user-profile:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      .user-profile i {
+        color: white;
+        font-size: 18px;
+      }
+
+      .user-name {
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      /* User Dropdown */
       .user-dropdown {
         position: absolute;
         top: 100%;
         right: 0;
-        background-color: white;
+        background: white;
         color: #333;
-        border-radius: 5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        min-width: 200px;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        min-width: 220px;
         z-index: 100;
         opacity: 0;
         visibility: hidden;
         transform: translateY(10px);
-        transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+        transition: all 0.3s ease;
       }
+
       .user-dropdown.active {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
       }
+
       .dropdown-header {
-        padding: 15px;
+        padding: 20px;
         border-bottom: 1px solid #eee;
-        text-align: left;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px 10px 0 0;
       }
+
       .dropdown-header h4 {
         margin: 0 0 5px 0;
-        font-weight: 600;
-        color: #1a5f7a;
+        font-weight: 700;
+        color: var(--primary);
       }
+
       .dropdown-header p {
         margin: 0;
-        font-size: 0.85rem;
+        font-size: 14px;
         color: #666;
       }
+
       .dropdown-item {
-        padding: 10px 15px;
+        padding: 15px 20px;
         cursor: pointer;
-        transition: background-color 0.2s;
+        transition: all 0.3s;
         text-align: left;
-        font-size: 0.9rem;
-      }
-      .dropdown-item:hover {
-        background-color: #f0f0f0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #666;
+        border-bottom: 1px solid #f0f0f0;
       }
 
-      /* --- Tata Letak Utama --- */
+      .dropdown-item:last-child {
+        border-bottom: none;
+        border-radius: 0 0 10px 10px;
+      }
+
+      .dropdown-item:hover {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+      }
+
+      /* Main Content */
       .main-content {
-        padding: 30px;
         max-width: 1400px;
         margin: 0 auto;
+        padding: 30px;
       }
 
-      /* --- back to home --- */
+      /* Back Button */
       .back-button {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        background: #1a5f7a;
+        gap: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 10px 20px;
+        padding: 12px 25px;
         border-radius: 30px;
         text-decoration: none;
-        font-weight: bold;
+        font-weight: 700;
+        font-size: 16px;
         margin-bottom: 30px;
-        transition: background 0.3s;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
       }
 
       .back-button:hover {
-        background: #144b61;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
       }
 
-      /* --- Section Title --- */
+      /* Section Title */
       .section-title {
-        font-size: 1.8rem;
-        font-weight: 600;
-        color: #1a5f7a;
-        margin-bottom: 25px;
-        border-bottom: 3px solid #2a9d8f;
-        padding-bottom: 10px;
-      }
-
-      /* --- Kartu Statistik --- */
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-        margin-bottom: 40px;
-      }
-      .card {
-        background-color: white;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: transform 0.3s;
-      }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      }
-      .card h3 {
-        margin: 0 0 5px 0;
-        font-size: 1rem;
-        color: #777;
-        font-weight: 500;
-      }
-      .card p {
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin: 0;
-      }
-      .card i {
-        font-size: 2.5rem;
-        opacity: 0.6;
-      }
-
-      /* Warna khusus untuk statistik */
-      .card:nth-child(1) i,
-      .card:nth-child(1) p { color: #e76f51; }
-      .card:nth-child(2) i,
-      .card:nth-child(2) p { color: #2a9d8f; }
-      .card:nth-child(3) i,
-      .card:nth-child(3) p { color: #f4a261; }
-      .card:nth-child(4) i,
-      .card:nth-child(4) p { color: #9b59b6; }
-      .card:nth-child(5) i,
-      .card:nth-child(5) p { color: #3498db; }
-      .card:nth-child(6) i,
-      .card:nth-child(6) p { color: #e74c3c; }
-      .card:nth-child(7) i,
-      .card:nth-child(7) p { color: #27ae60; }
-
-      /* --- Area Chart --- */
-      .chart-container {
-        background-color: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        margin-bottom: 40px;
-        height: 450px;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 30px;
         position: relative;
+        padding-bottom: 15px;
       }
 
-      /* --- Filter Eselon --- */
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+      }
+
+      /* Filter Section */
       .filter-section {
-        background-color: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        background: white;
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
         margin-bottom: 30px;
       }
 
-      .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 15px;
-        margin-top: 15px;
-      }
-
-      .filter-btn {
-        padding: 12px 20px;
-        border: 2px solid #1a5f7a;
-        background-color: white;
-        color: #1a5f7a;
-        font-weight: 600;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s;
-        text-align: center;
-      }
-
-      .filter-btn:hover {
-        background-color: #f0f7f8;
-      }
-
-      .filter-btn.active {
-        background-color: #1a5f7a;
-        color: white;
-        box-shadow: 0 4px 8px rgba(26, 95, 122, 0.4);
-      }
-
-      /* --- Tabel Data Eselon --- */
-      .data-table-section {
-        margin-top: 40px;
-      }
-
-      .data-table-container {
-        overflow-x: auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      }
-
-      .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-        min-width: 1100px;
-      }
-
-      .data-table thead {
-        background: linear-gradient(90deg, #1a5f7a 0%, #2a9d8f 100%);
-        color: white;
-      }
-
-      .data-table th {
-        padding: 18px 12px;
-        text-align: center;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .data-table th:last-child {
-        border-right: none;
-      }
-
-      .data-table tbody tr {
-        border-bottom: 1px solid #eee;
-        transition: background-color 0.2s;
-      }
-
-      .data-table tbody tr:hover {
-        background-color: #f8f9fa;
-      }
-
-      .data-table tbody tr:nth-child(even) {
-        background-color: #f8f9fa;
-      }
-
-      .data-table tbody tr:nth-child(even):hover {
-        background-color: #e9ecef;
-      }
-
-      .data-table td {
-        padding: 16px 12px;
-        text-align: center;
-        font-size: 0.95rem;
-      }
-
-      .data-table td:first-child {
-        font-weight: 600;
-        color: #1a5f7a;
-        background-color: #f0f7f8;
-      }
-
-      /* Highlight untuk persentase */
-      .percentage-high {
-        color: #27ae60;
-        font-weight: 600;
-      }
-
-      .percentage-medium {
-        color: #f39c12;
-        font-weight: 600;
-      }
-
-      .percentage-low {
-        color: #e74c3c;
-        font-weight: 600;
-      }
-
-      /* --- Card Laporan Ringkasan --- */
-      .summary-card {
-        background: linear-gradient(135deg, #1a5f7a 0%, #2a9d8f 100%);
-        color: white;
-        border-radius: 12px;
-        padding: 30px;
-        margin: 40px 0;
-        box-shadow: 0 8px 25px rgba(26, 95, 122, 0.2);
-      }
-
-      .summary-card h3 {
-        font-size: 1.5rem;
+      .filter-header {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
         margin-bottom: 20px;
         display: flex;
         align-items: center;
         gap: 10px;
       }
 
+      .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+      }
+
+      .filter-btn {
+        padding: 15px 20px;
+        border: 2px solid #6a11cb;
+        background: white;
+        color: #6a11cb;
+        font-weight: 700;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      .filter-btn:hover {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+      }
+
+      .filter-btn.active {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        transform: translateY(-2px);
+      }
+
+      /* Stats Cards */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .stat-info h3 {
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        color: #666;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-number {
+        font-size: 36px;
+        font-weight: 800;
+        color: var(--primary);
+        margin: 0;
+      }
+
+      .stat-icon {
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: white;
+      }
+
+      .stat-card:nth-child(1) .stat-icon {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+      .stat-card:nth-child(2) .stat-icon {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+      }
+      .stat-card:nth-child(3) .stat-icon {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+      }
+      .stat-card:nth-child(4) .stat-icon {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      }
+      .stat-card:nth-child(5) .stat-icon {
+        background: linear-gradient(135deg, #f1c40f, #f39c12);
+      }
+      .stat-card:nth-child(6) .stat-icon {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+      }
+      .stat-card:nth-child(7) .stat-icon {
+        background: linear-gradient(135deg, #34495e, #2c3e50);
+      }
+
+      /* Summary Card */
+      .summary-card {
+        background: linear-gradient(135deg, #1a5f7a 0%, #2a9d8f 100%);
+        color: white;
+        border-radius: var(--radius);
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 10px 30px rgba(26, 95, 122, 0.2);
+      }
+
+      .summary-header {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
       .summary-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        gap: 25px;
       }
 
       .summary-item {
         text-align: center;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        transition: transform 0.3s;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
       }
 
       .summary-item:hover {
         transform: translateY(-5px);
-        background-color: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       }
 
       .summary-item h4 {
-        font-size: 1rem;
+        font-size: 16px;
         margin-bottom: 10px;
         opacity: 0.9;
+        font-weight: 600;
       }
 
-      .summary-item p {
-        font-size: 2rem;
-        font-weight: 700;
+      .summary-number {
+        font-size: 36px;
+        font-weight: 800;
       }
 
-      /* --- Progress Bar --- */
-      .progress-section {
-        background-color: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      /* Chart Container */
+      .chart-container {
+        background: white;
+        border-radius: var(--radius);
+        padding: 30px;
+        box-shadow: var(--shadow);
         margin: 40px 0;
+        height: 450px;
+        position: relative;
+      }
+
+      /* Progress Section */
+      .progress-section {
+        background: white;
+        border-radius: var(--radius);
+        padding: 30px;
+        box-shadow: var(--shadow);
+        margin: 40px 0;
+      }
+
+      .progress-header {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
 
       .progress-item {
         margin-bottom: 25px;
       }
 
-      .progress-header {
+      .progress-label {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 8px;
-      }
-
-      .progress-label {
+        margin-bottom: 10px;
         font-weight: 600;
-        color: #1a5f7a;
+        color: var(--primary);
       }
 
       .progress-percentage {
-        font-weight: 600;
+        font-weight: 700;
         color: #2a9d8f;
+      }
+
+      .percentage-high {
+        color: #27ae60 !important;
+      }
+      .percentage-medium {
+        color: #f39c12 !important;
+      }
+      .percentage-low {
+        color: #e74c3c !important;
       }
 
       .progress-bar {
         height: 12px;
-        background-color: #ecf0f1;
+        background: #ecf0f1;
         border-radius: 6px;
         overflow: hidden;
       }
@@ -418,138 +551,296 @@
         transition: width 1s ease-out;
       }
 
-      /* --- Footer --- */
-      footer {
-        text-align: center;
-        padding: 20px;
-        background-color: #34495e;
-        color: #ecf0f1;
-        font-size: 0.85rem;
-        margin-top: 40px;
+      /* Table Section */
+      .data-table-section {
+        margin: 60px 0;
       }
 
-      /* --- Loading & Error States --- */
+      .data-table-container {
+        overflow-x: auto;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        min-width: 1200px;
+      }
+
+      .data-table thead {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+      }
+
+      .data-table th {
+        padding: 20px 15px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        white-space: nowrap;
+      }
+
+      .data-table th:last-child {
+        border-right: none;
+      }
+
+      .data-table tbody tr {
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.3s;
+      }
+
+      .data-table tbody tr:hover {
+        background-color: #f8f9ff;
+      }
+
+      .data-table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .data-table tbody tr:nth-child(even):hover {
+        background-color: #f0f2ff;
+      }
+
+      .data-table td {
+        padding: 18px 15px;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      .data-table td:first-child {
+        font-weight: 700;
+        color: #6a11cb;
+        background-color: #f8f9ff;
+      }
+
+      .data-table tfoot tr {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        font-weight: 700;
+      }
+
+      /* Footer */
+      .modern-footer {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 60px 0 20px;
+        margin-top: 60px;
+      }
+
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 30px;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+      }
+
+      .footer-link {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      .footer-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Loading & Error States */
       .loading-container {
         text-align: center;
-        padding: 40px;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        padding: 50px;
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
       }
 
       .loading {
         display: inline-block;
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         border: 4px solid #f3f3f3;
-        border-top: 4px solid #1a5f7a;
+        border-top: 4px solid #6a11cb;
         border-radius: 50%;
         animation: spin 1s linear infinite;
         margin-bottom: 20px;
       }
 
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       .error-message {
-        background-color: #ffeaa7;
-        border: 1px solid #fdcb6e;
-        border-radius: 8px;
-        padding: 20px;
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        border: none;
+        border-radius: var(--radius);
+        padding: 25px;
         margin: 20px 0;
         color: #e17055;
         text-align: center;
+        box-shadow: var(--shadow);
       }
 
       .error-message i {
-        font-size: 2rem;
-        margin-bottom: 10px;
+        font-size: 36px;
+        margin-bottom: 15px;
         display: block;
       }
 
-      /* --- Responsiveness --- */
+      .retry-btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+      }
+
+      .retry-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      /* Responsive */
       @media (max-width: 1200px) {
+        .header-content,
+        .main-content,
+        .footer-content {
+          padding: 0 20px;
+        }
+
+        .cards {
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .modern-nav {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .chart-container {
+          height: 350px;
+        }
+
+        .summary-grid {
+          grid-template-columns: 1fr;
+        }
+
         .data-table {
           min-width: 1000px;
         }
       }
 
-      @media (max-width: 768px) {
-        .header-container {
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 10px 20px;
-        }
-        .user-info {
-          margin-top: 10px;
-        }
-        .main-content {
-          padding: 20px;
-        }
-        .cards {
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-        .card p {
-          font-size: 1.8rem;
-        }
-        .card i {
-          font-size: 2rem;
-        }
-        .chart-container {
-          height: 350px;
-        }
-        .summary-grid {
-          grid-template-columns: 1fr;
-        }
-        .filter-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
       @media (max-width: 480px) {
         .section-title {
-          font-size: 1.5rem;
+          font-size: 28px;
         }
-        .cards {
-          grid-template-columns: 1fr;
-        }
-        .chart-container {
-          height: 300px;
-          padding: 15px;
-        }
-        .summary-card {
-          padding: 20px;
-        }
-        .summary-item p {
-          font-size: 1.5rem;
-        }
+
         .filter-grid {
           grid-template-columns: 1fr;
         }
-        .filter-btn {
-          padding: 10px 15px;
+
+        .chart-container {
+          height: 300px;
+          padding: 20px;
+        }
+
+        .summary-number {
+          font-size: 28px;
         }
       }
     </style>
   </head>
   <body>
-    <header class="header-container">
-      <div class="logo-section">
-        <h1>Dashboard Pelatihan Manajerial</h1>
-        <p>Bidang PKA BKPSDM Kabupaten Ciamis</p>
-      </div>
-      <div class="user-info" id="user-info">
-        <i class="fas fa-user-circle"></i>
-        <span id="user-display">Guest</span>
-        <div class="user-dropdown" id="user-dropdown">
-          <div class="dropdown-header">
-            <h4 id="dropdown-name">Nama Pengguna</h4>
-            <p id="dropdown-username">username@domain.com</p>
+    <!-- Modern Header -->
+    <header class="modern-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <img
+            src="https://i.ibb.co.com/JWw8qHmM/logo-bkpsdm.png"
+            alt="Logo BKPSDM"
+          />
+          <div class="logo-text">
+            <h1>SINGGATERA</h1>
+            <p>Bidang PKA BKPSDM Kabupaten Ciamis</p>
           </div>
-          <div class="dropdown-item" id="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Logout
+        </div>
+
+        <nav class="modern-nav">
+          <a href="index.html" class="nav-link">
+            <i class="fas fa-home"></i> HOME
+          </a>
+          <a href="pelatihanman.html" class="nav-link active">
+            <i class="fas fa-chart-bar"></i> DASHBOARD
+          </a>
+          <a href="ksf.html" class="nav-link">
+            <i class="fas fa-comments"></i> KONSULTASI
+          </a>
+        </nav>
+
+        <div class="header-actions">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Cari data..." />
+          </div>
+
+          <div class="user-profile" id="userProfile">
+            <i class="fas fa-user-circle"></i>
+            <span class="user-name" id="userName">Guest</span>
+            <div class="user-dropdown" id="userDropdown">
+              <div class="dropdown-header">
+                <h4 id="dropdownName">Nama Pengguna</h4>
+                <p id="dropdownUsername">username@domain.com</p>
+              </div>
+              <div class="dropdown-item" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -557,14 +848,16 @@
 
     <main class="main-content">
       <a href="index.html" class="back-button">
-        <i class="fas fa-arrow-left"></i> Kembali ke Home
+        <i class="fas fa-arrow-left"></i> KEMBALI KE HOME
       </a>
 
       <h2 class="section-title">Dashboard Pelatihan Manajerial</h2>
 
       <!-- Filter Eselon -->
-      <div class="filter-section" id="filterSection">
-        <h3 style="color: #1a5f7a; margin-bottom: 15px;">Filter Data:</h3>
+      <div class="filter-section">
+        <h3 class="filter-header">
+          <i class="fas fa-filter"></i> Filter Data Eselon
+        </h3>
         <div class="filter-grid" id="filterButtons">
           <!-- Filter buttons akan diisi oleh JavaScript -->
         </div>
@@ -579,24 +872,26 @@
       </div>
 
       <!-- Laporan Ringkasan -->
-      <div class="summary-card" id="summaryCard">
-        <h3><i class="fas fa-chart-line"></i> Ringkasan Pelatihan Manajerial</h3>
+      <div class="summary-card">
+        <h3 class="summary-header">
+          <i class="fas fa-chart-line"></i> Ringkasan Pelatihan Manajerial
+        </h3>
         <div class="summary-grid">
           <div class="summary-item">
             <h4>Total Pegawai</h4>
-            <p id="total-pegawai">0</p>
+            <div class="summary-number" id="total-pegawai">0</div>
           </div>
           <div class="summary-item">
             <h4>Total Sudah Diklat</h4>
-            <p id="total-sudah">0</p>
+            <div class="summary-number" id="total-sudah">0</div>
           </div>
           <div class="summary-item">
             <h4>Total Belum Diklat</h4>
-            <p id="total-belum">0</p>
+            <div class="summary-number" id="total-belum">0</div>
           </div>
           <div class="summary-item">
             <h4>Persentase Selesai</h4>
-            <p id="persentase">0%</p>
+            <div class="summary-number" id="persentase">0%</div>
           </div>
         </div>
       </div>
@@ -608,13 +903,15 @@
 
       <!-- Progress Bar -->
       <div class="progress-section">
-        <h3 style="color: #1a5f7a; margin-bottom: 20px;">Progress Pelatihan per Eselon</h3>
+        <h3 class="progress-header">
+          <i class="fas fa-chart-bar"></i> Progress Pelatihan per Eselon
+        </h3>
         <div id="progressBars"></div>
       </div>
 
       <!-- Tabel Data Lengkap -->
       <section class="data-table-section">
-        <h3 class="section-title">Data Detail Pelatihan per Eselon</h3>
+        <h2 class="section-title">Data Detail Pelatihan per Eselon</h2>
         <div class="data-table-container">
           <table class="data-table" id="eselonTable">
             <thead>
@@ -635,7 +932,7 @@
             </thead>
             <tbody id="eselonTableBody">
               <tr>
-                <td colspan="12" style="text-align: center; padding: 40px;">
+                <td colspan="12" style="text-align: center; padding: 50px">
                   <div class="loading"></div>
                   <p>Memuat data...</p>
                 </td>
@@ -649,16 +946,31 @@
       </section>
     </main>
 
-    <footer>
-      &copy; 2025 Bidang Pengembangan Kompetensi Aparatur - BKPSDM Kabupaten Ciamis
+    <!-- Footer -->
+    <footer class="modern-footer">
+      <div class="footer-content">
+        <div class="footer-bottom">
+          <p>
+            Copyright © 2025
+            <a
+              href="https://www.pka-bkpsdm-ciamiskab.my.id/home"
+              class="footer-link"
+            >
+              PKA BKPSDM Kabupaten Ciamis
+            </a>
+            | All Rights Reserved, v2.0
+          </p>
+        </div>
+      </div>
     </footer>
 
     <script>
       // URL Google Apps Script untuk mengambil data dari spreadsheet
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbwUMWroKOsQictlBluophZv48ccQDutoxEHgKuw5TiEH2Gv1oGDW65pGFCwAzkQmDycyA/exec";
+      const scriptUrl =
+        "https://script.google.com/macros/s/AKfycbwUMWroKOsQictlBluophZv48ccQDutoxEHgKuw5TiEH2Gv1oGDW65pGFCwAzkQmDycyA/exec";
 
       let pelatihanData = {};
-      let currentFilter = 'all';
+      let currentFilter = "all";
       let chart;
 
       // Fungsi untuk mengambil data dari spreadsheet
@@ -666,20 +978,20 @@
         try {
           // Tampilkan loading state
           document.getElementById("statsCards").innerHTML = `
-            <div class="loading-container">
-              <div class="loading"></div>
-              <p>Memuat data statistik...</p>
-            </div>
-          `;
+                    <div class="loading-container fade-in">
+                        <div class="loading"></div>
+                        <p>Memuat data statistik...</p>
+                    </div>
+                `;
 
           document.getElementById("eselonTableBody").innerHTML = `
-            <tr>
-              <td colspan="12" style="text-align: center; padding: 40px;">
-                <div class="loading"></div>
-                <p>Memuat data...</p>
-              </td>
-            </tr>
-          `;
+                    <tr>
+                        <td colspan="12" style="text-align: center; padding: 50px;">
+                            <div class="loading"></div>
+                            <p>Memuat data...</p>
+                        </td>
+                    </tr>
+                `;
 
           const res = await fetch(scriptUrl);
 
@@ -699,21 +1011,21 @@
             renderEselonTable(data.data, data.totals);
             renderChart(data.data);
           } else {
-            throw new Error(data.error || 'Gagal mengambil data');
+            throw new Error(data.error || "Gagal mengambil data");
           }
         } catch (error) {
           console.error("Error fetching data:", error);
 
           // Tampilkan pesan error
           document.getElementById("statsCards").innerHTML = `
-            <div class="error-message">
-              <i class="fas fa-exclamation-triangle"></i>
-              <p>Gagal memuat data statistik: ${error.message}</p>
-              <button onclick="fetchPelatihanData()" style="margin-top: 10px; padding: 8px 16px; background: #1a5f7a; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                Coba Lagi
-              </button>
-            </div>
-          `;
+                    <div class="error-message fade-in">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Gagal memuat data statistik: ${error.message}</p>
+                        <button onclick="fetchPelatihanData()" class="retry-btn">
+                            <i class="fas fa-redo"></i> Coba Lagi
+                        </button>
+                    </div>
+                `;
 
           // Gunakan data fallback jika ada error
           useFallbackData();
@@ -736,7 +1048,7 @@
               prajabatan: 5,
               adum: 5,
               belum_diklat: 10,
-              sudah_diklat: 40
+              sudah_diklat: 40,
             },
             {
               eselon: "III",
@@ -749,7 +1061,7 @@
               prajabatan: 10,
               adum: 10,
               belum_diklat: 25,
-              sudah_diklat: 95
+              sudah_diklat: 95,
             },
             {
               eselon: "IV",
@@ -762,7 +1074,7 @@
               prajabatan: 15,
               adum: 15,
               belum_diklat: 50,
-              sudah_diklat: 150
+              sudah_diklat: 150,
             },
             {
               eselon: "V",
@@ -775,8 +1087,8 @@
               prajabatan: 20,
               adum: 20,
               belum_diklat: 70,
-              sudah_diklat: 280
-            }
+              sudah_diklat: 280,
+            },
           ],
           totals: {
             total_pegawai: 720,
@@ -788,13 +1100,21 @@
             total_prajabatan: 50,
             total_adum: 50,
             total_jabatan_terisi: 670,
-            total_jabatan_kosong: 50
-          }
+            total_jabatan_kosong: 50,
+          },
         };
 
         // Hitung persentase untuk fallback
-        fallbackData.totals.persen_sudah_diklat = ((fallbackData.totals.total_sudah_diklat / fallbackData.totals.total_pegawai) * 100).toFixed(1);
-        fallbackData.totals.persen_belum_diklat = ((fallbackData.totals.total_belum_diklat / fallbackData.totals.total_pegawai) * 100).toFixed(1);
+        fallbackData.totals.persen_sudah_diklat = (
+          (fallbackData.totals.total_sudah_diklat /
+            fallbackData.totals.total_pegawai) *
+          100
+        ).toFixed(1);
+        fallbackData.totals.persen_belum_diklat = (
+          (fallbackData.totals.total_belum_diklat /
+            fallbackData.totals.total_pegawai) *
+          100
+        ).toFixed(1);
 
         pelatihanData = fallbackData;
         updateFilterButtons(fallbackData.data);
@@ -806,74 +1126,121 @@
 
         // Tampilkan notifikasi bahwa menggunakan data fallback
         const notification = document.createElement("div");
-        notification.className = "error-message";
+        notification.className = "error-message fade-in";
         notification.style.marginTop = "20px";
         notification.innerHTML = `
-          <i class="fas fa-info-circle"></i>
-          <p>Menggunakan data contoh karena koneksi ke server terhambat. Data mungkin tidak terbaru.</p>
-        `;
-        document.querySelector(".main-content").prepend(notification);
+                <i class="fas fa-info-circle"></i>
+                <p>Menggunakan data contoh karena koneksi ke server terhambat. Data mungkin tidak terbaru.</p>
+            `;
+        document.querySelector(".main-content").appendChild(notification);
       }
 
       // Fungsi untuk membuat filter buttons
       function updateFilterButtons(data) {
         const container = document.getElementById("filterButtons");
-        
+
         // Ekstrak semua eselon unik
-        const eselonList = [...new Set(data.map(item => item.eselon))].sort();
-        
+        const eselonList = [...new Set(data.map((item) => item.eselon))].sort();
+
         const buttonsHTML = `
-          <button class="filter-btn active" onclick="filterData('all')">
-            Semua Eselon
-          </button>
-          ${eselonList.map(eselon => `
-            <button class="filter-btn" onclick="filterData('${eselon}')">
-              Eselon ${eselon}
-            </button>
-          `).join('')}
-        `;
-        
+                <button class="filter-btn active" onclick="filterData('all')">
+                    <i class="fas fa-layer-group"></i> Semua Eselon
+                </button>
+                ${eselonList
+                  .map(
+                    (eselon) => `
+                    <button class="filter-btn" onclick="filterData('${eselon}')">
+                        <i class="fas fa-filter"></i> Eselon ${eselon}
+                    </button>
+                `
+                  )
+                  .join("")}
+            `;
+
         container.innerHTML = buttonsHTML;
       }
 
       // Fungsi untuk filter data berdasarkan eselon
       function filterData(eselon) {
         currentFilter = eselon;
-        
+
         // Update active button
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.classList.remove('active');
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.classList.remove("active");
         });
-        document.querySelector(`button[onclick="filterData('${eselon}')"]`).classList.add('active');
-        
+        document
+          .querySelector(`button[onclick="filterData('${eselon}')"]`)
+          .classList.add("active");
+
         // Filter data yang akan ditampilkan
         let filteredData = pelatihanData.data;
         let filteredTotals = pelatihanData.totals;
-        
-        if (eselon !== 'all') {
-          filteredData = pelatihanData.data.filter(item => item.eselon === eselon);
-          
+
+        if (eselon !== "all") {
+          filteredData = pelatihanData.data.filter(
+            (item) => item.eselon === eselon
+          );
+
           // Hitung ulang totals untuk filtered data
           filteredTotals = {
-            total_pegawai: filteredData.reduce((sum, item) => sum + item.jumlah_pegawai, 0),
-            total_sudah_diklat: filteredData.reduce((sum, item) => sum + item.sudah_diklat, 0),
-            total_belum_diklat: filteredData.reduce((sum, item) => sum + item.belum_diklat, 0),
-            total_diklatpim_iv: filteredData.reduce((sum, item) => sum + item.diklatpim_iv, 0),
-            total_diklatpim_iii: filteredData.reduce((sum, item) => sum + item.diklatpim_iii, 0),
-            total_diklatpim_ii: filteredData.reduce((sum, item) => sum + item.diklatpim_ii, 0),
-            total_prajabatan: filteredData.reduce((sum, item) => sum + item.prajabatan, 0),
+            total_pegawai: filteredData.reduce(
+              (sum, item) => sum + item.jumlah_pegawai,
+              0
+            ),
+            total_sudah_diklat: filteredData.reduce(
+              (sum, item) => sum + item.sudah_diklat,
+              0
+            ),
+            total_belum_diklat: filteredData.reduce(
+              (sum, item) => sum + item.belum_diklat,
+              0
+            ),
+            total_diklatpim_iv: filteredData.reduce(
+              (sum, item) => sum + item.diklatpim_iv,
+              0
+            ),
+            total_diklatpim_iii: filteredData.reduce(
+              (sum, item) => sum + item.diklatpim_iii,
+              0
+            ),
+            total_diklatpim_ii: filteredData.reduce(
+              (sum, item) => sum + item.diklatpim_ii,
+              0
+            ),
+            total_prajabatan: filteredData.reduce(
+              (sum, item) => sum + item.prajabatan,
+              0
+            ),
             total_adum: filteredData.reduce((sum, item) => sum + item.adum, 0),
-            total_jabatan_terisi: filteredData.reduce((sum, item) => sum + item.jabatan_terisi, 0),
-            total_jabatan_kosong: filteredData.reduce((sum, item) => sum + item.jabatan_kosong, 0)
+            total_jabatan_terisi: filteredData.reduce(
+              (sum, item) => sum + item.jabatan_terisi,
+              0
+            ),
+            total_jabatan_kosong: filteredData.reduce(
+              (sum, item) => sum + item.jabatan_kosong,
+              0
+            ),
           };
-          
+
           // Hitung persentase untuk filtered data
-          filteredTotals.persen_sudah_diklat = filteredTotals.total_pegawai > 0 ? 
-            ((filteredTotals.total_sudah_diklat / filteredTotals.total_pegawai) * 100).toFixed(1) : 0;
-          filteredTotals.persen_belum_diklat = filteredTotals.total_pegawai > 0 ? 
-            ((filteredTotals.total_belum_diklat / filteredTotals.total_pegawai) * 100).toFixed(1) : 0;
+          filteredTotals.persen_sudah_diklat =
+            filteredTotals.total_pegawai > 0
+              ? (
+                  (filteredTotals.total_sudah_diklat /
+                    filteredTotals.total_pegawai) *
+                  100
+                ).toFixed(1)
+              : 0;
+          filteredTotals.persen_belum_diklat =
+            filteredTotals.total_pegawai > 0
+              ? (
+                  (filteredTotals.total_belum_diklat /
+                    filteredTotals.total_pegawai) *
+                  100
+                ).toFixed(1)
+              : 0;
         }
-        
+
         // Update UI dengan data filtered
         updateStatsCards(filteredTotals);
         renderSummary(filteredTotals);
@@ -885,95 +1252,133 @@
       // Fungsi untuk memperbarui kartu statistik
       function updateStatsCards(totals) {
         const container = document.getElementById("statsCards");
-        
+
         container.innerHTML = `
-          <div class="card">
-            <div class="stat-info">
-              <h3>Total Pegawai</h3>
-              <p>${totals.total_pegawai.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="card">
-            <div class="stat-info">
-              <h3>Sudah Diklat</h3>
-              <p>${totals.total_sudah_diklat.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          <div class="card">
-            <div class="stat-info">
-              <h3>Belum Diklat</h3>
-              <p>${totals.total_belum_diklat.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-book"></i>
-          </div>
-          <div class="card">
-            <div class="stat-info">
-              <h3>Diklatpim IV</h3>
-              <p>${totals.total_diklatpim_iv.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-user-tie"></i>
-          </div>
-          <div class="card">
-            <div class="stat-info">
-              <h3>Diklatpim III</h3>
-              <p>${totals.total_diklatpim_iii.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-user-cog"></i>
-          </div>
-          <div class="card">
-            <div class="stat-info">
-              <h3>Diklatpim II</h3>
-              <p>${totals.total_diklatpim_ii.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-user-shield"></i>
-          </div>
-          <div class="card">
-            <div class="stat-info">
-              <h3>Prajabatan</h3>
-              <p>${totals.total_prajabatan.toLocaleString('id-ID')}</p>
-            </div>
-            <i class="fas fa-user-graduate"></i>
-          </div>
-        `;
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Total Pegawai</h3>
+                        <p class="stat-number">${totals.total_pegawai.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Sudah Diklat</h3>
+                        <p class="stat-number">${totals.total_sudah_diklat.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Belum Diklat</h3>
+                        <p class="stat-number">${totals.total_belum_diklat.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Diklatpim IV</h3>
+                        <p class="stat-number">${totals.total_diklatpim_iv.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Diklatpim III</h3>
+                        <p class="stat-number">${totals.total_diklatpim_iii.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Diklatpim II</h3>
+                        <p class="stat-number">${totals.total_diklatpim_ii.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-info">
+                        <h3>Prajabatan</h3>
+                        <p class="stat-number">${totals.total_prajabatan.toLocaleString(
+                          "id-ID"
+                        )}</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                </div>
+            `;
       }
 
       // Fungsi untuk merender ringkasan
       function renderSummary(totals) {
-        document.getElementById("total-pegawai").textContent = totals.total_pegawai.toLocaleString('id-ID');
-        document.getElementById("total-sudah").textContent = totals.total_sudah_diklat.toLocaleString('id-ID');
-        document.getElementById("total-belum").textContent = totals.total_belum_diklat.toLocaleString('id-ID');
-        document.getElementById("persentase").textContent = `${totals.persen_sudah_diklat}%`;
+        document.getElementById("total-pegawai").textContent =
+          totals.total_pegawai.toLocaleString("id-ID");
+        document.getElementById("total-sudah").textContent =
+          totals.total_sudah_diklat.toLocaleString("id-ID");
+        document.getElementById("total-belum").textContent =
+          totals.total_belum_diklat.toLocaleString("id-ID");
+        document.getElementById(
+          "persentase"
+        ).textContent = `${totals.persen_sudah_diklat}%`;
       }
 
       // Fungsi untuk merender progress bars
       function renderProgressBars(data) {
         const container = document.getElementById("progressBars");
-        
-        const progressHTML = data.map(item => {
-          const totalPegawai = item.jumlah_pegawai;
-          const sudahDiklat = item.sudah_diklat;
-          const percentage = totalPegawai > 0 ? Math.round((sudahDiklat / totalPegawai) * 100) : 0;
-          
-          // Tentukan class berdasarkan persentase
-          let percentageClass = 'percentage-medium';
-          if (percentage >= 80) percentageClass = 'percentage-high';
-          if (percentage < 50) percentageClass = 'percentage-low';
-          
-          return `
-            <div class="progress-item">
-              <div class="progress-header">
-                <span class="progress-label">Eselon ${item.eselon}</span>
-                <span class="progress-percentage ${percentageClass}">${percentage}%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${percentage}%"></div>
-              </div>
-            </div>
-          `;
-        }).join('');
-        
+
+        const progressHTML = data
+          .map((item) => {
+            const totalPegawai = item.jumlah_pegawai;
+            const sudahDiklat = item.sudah_diklat;
+            const percentage =
+              totalPegawai > 0
+                ? Math.round((sudahDiklat / totalPegawai) * 100)
+                : 0;
+
+            // Tentukan class berdasarkan persentase
+            let percentageClass = "percentage-medium";
+            if (percentage >= 80) percentageClass = "percentage-high";
+            if (percentage < 50) percentageClass = "percentage-low";
+
+            return `
+                    <div class="progress-item fade-in">
+                        <div class="progress-label">
+                            <span>Eselon ${item.eselon}</span>
+                            <span class="progress-percentage ${percentageClass}">${percentage}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+
         container.innerHTML = progressHTML;
       }
 
@@ -981,185 +1386,253 @@
       function renderEselonTable(data, totals) {
         const tbody = document.getElementById("eselonTableBody");
         const tfoot = document.getElementById("eselonTableFooter");
-        
+
         // Render baris data
-        const rowsHTML = data.map(item => {
-          const totalPegawai = item.jumlah_pegawai;
-          const sudahDiklat = item.sudah_diklat;
-          const percentage = totalPegawai > 0 ? ((sudahDiklat / totalPegawai) * 100).toFixed(1) : 0;
-          
-          // Tentukan class untuk persentase
-          let percentageClass = 'percentage-medium';
-          const percNum = parseFloat(percentage);
-          if (percNum >= 80) percentageClass = 'percentage-high';
-          if (percNum < 50) percentageClass = 'percentage-low';
-          
-          return `
-            <tr>
-              <td>Eselon ${item.eselon}</td>
-              <td>${item.jumlah_pegawai.toLocaleString('id-ID')}</td>
-              <td>${item.jabatan_terisi.toLocaleString('id-ID')}</td>
-              <td>${item.jabatan_kosong.toLocaleString('id-ID')}</td>
-              <td>${item.diklatpim_iv.toLocaleString('id-ID')}</td>
-              <td>${item.diklatpim_iii.toLocaleString('id-ID')}</td>
-              <td>${item.diklatpim_ii.toLocaleString('id-ID')}</td>
-              <td>${item.prajabatan.toLocaleString('id-ID')}</td>
-              <td>${item.adum.toLocaleString('id-ID')}</td>
-              <td>${item.belum_diklat.toLocaleString('id-ID')}</td>
-              <td>${item.sudah_diklat.toLocaleString('id-ID')}</td>
-              <td class="${percentageClass}"><strong>${percentage}%</strong></td>
-            </tr>
-          `;
-        }).join('');
-        
+        const rowsHTML = data
+          .map((item) => {
+            const totalPegawai = item.jumlah_pegawai;
+            const sudahDiklat = item.sudah_diklat;
+            const percentage =
+              totalPegawai > 0
+                ? ((sudahDiklat / totalPegawai) * 100).toFixed(1)
+                : 0;
+
+            // Tentukan class untuk persentase
+            let percentageClass = "percentage-medium";
+            const percNum = parseFloat(percentage);
+            if (percNum >= 80) percentageClass = "percentage-high";
+            if (percNum < 50) percentageClass = "percentage-low";
+
+            return `
+                    <tr class="fade-in">
+                        <td>Eselon ${item.eselon}</td>
+                        <td>${item.jumlah_pegawai.toLocaleString("id-ID")}</td>
+                        <td>${item.jabatan_terisi.toLocaleString("id-ID")}</td>
+                        <td>${item.jabatan_kosong.toLocaleString("id-ID")}</td>
+                        <td>${item.diklatpim_iv.toLocaleString("id-ID")}</td>
+                        <td>${item.diklatpim_iii.toLocaleString("id-ID")}</td>
+                        <td>${item.diklatpim_ii.toLocaleString("id-ID")}</td>
+                        <td>${item.prajabatan.toLocaleString("id-ID")}</td>
+                        <td>${item.adum.toLocaleString("id-ID")}</td>
+                        <td>${item.belum_diklat.toLocaleString("id-ID")}</td>
+                        <td>${item.sudah_diklat.toLocaleString("id-ID")}</td>
+                        <td class="${percentageClass}"><strong>${percentage}%</strong></td>
+                    </tr>
+                `;
+          })
+          .join("");
+
         tbody.innerHTML = rowsHTML;
-        
+
         // Render footer dengan total
         const footerHTML = `
-          <tr style="background-color: #f0f7f8; font-weight: bold;">
-            <td>TOTAL</td>
-            <td>${totals.total_pegawai.toLocaleString('id-ID')}</td>
-            <td>${totals.total_jabatan_terisi.toLocaleString('id-ID')}</td>
-            <td>${totals.total_jabatan_kosong.toLocaleString('id-ID')}</td>
-            <td>${totals.total_diklatpim_iv.toLocaleString('id-ID')}</td>
-            <td>${totals.total_diklatpim_iii.toLocaleString('id-ID')}</td>
-            <td>${totals.total_diklatpim_ii.toLocaleString('id-ID')}</td>
-            <td>${totals.total_prajabatan.toLocaleString('id-ID')}</td>
-            <td>${totals.total_adum.toLocaleString('id-ID')}</td>
-            <td>${totals.total_belum_diklat.toLocaleString('id-ID')}</td>
-            <td>${totals.total_sudah_diklat.toLocaleString('id-ID')}</td>
-            <td class="percentage-high">${totals.persen_sudah_diklat}%</td>
-          </tr>
-        `;
-        
+                <tr class="fade-in">
+                    <td><strong>TOTAL</strong></td>
+                    <td><strong>${totals.total_pegawai.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_jabatan_terisi.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_jabatan_kosong.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_diklatpim_iv.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_diklatpim_iii.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_diklatpim_ii.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_prajabatan.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_adum.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_belum_diklat.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td><strong>${totals.total_sudah_diklat.toLocaleString(
+                      "id-ID"
+                    )}</strong></td>
+                    <td class="percentage-high"><strong>${
+                      totals.persen_sudah_diklat
+                    }%</strong></td>
+                </tr>
+            `;
+
         tfoot.innerHTML = footerHTML;
       }
 
       // Fungsi untuk merender chart
       function renderChart(data) {
         const ctx = document.getElementById("pelatihanChart").getContext("2d");
-        
+
         // Siapkan data untuk chart
-        const labels = data.map(item => `Eselon ${item.eselon}`);
-        const diklatpimIV = data.map(item => item.diklatpim_iv);
-        const diklatpimIII = data.map(item => item.diklatpim_iii);
-        const diklatpimII = data.map(item => item.diklatpim_ii);
-        const prajabatan = data.map(item => item.prajabatan);
-        const adum = data.map(item => item.adum);
-        const belumDiklat = data.map(item => item.belum_diklat);
+        const labels = data.map((item) => `Eselon ${item.eselon}`);
+        const diklatpimIV = data.map((item) => item.diklatpim_iv);
+        const diklatpimIII = data.map((item) => item.diklatpim_iii);
+        const diklatpimII = data.map((item) => item.diklatpim_ii);
+        const prajabatan = data.map((item) => item.prajabatan);
+        const adum = data.map((item) => item.adum);
+        const belumDiklat = data.map((item) => item.belum_diklat);
 
         if (chart) chart.destroy(); // Destroy chart sebelumnya jika ada
 
         chart = new Chart(ctx, {
-          type: 'bar',
+          type: "bar",
           data: {
             labels: labels,
             datasets: [
               {
-                label: 'Diklatpim IV',
+                label: "Diklatpim IV",
                 data: diklatpimIV,
-                backgroundColor: 'rgba(231, 111, 81, 0.8)',
-                borderColor: 'rgba(231, 111, 81, 1)',
-                borderWidth: 1
+                backgroundColor: "rgba(231, 111, 81, 0.8)",
+                borderColor: "rgba(231, 111, 81, 1)",
+                borderWidth: 1,
               },
               {
-                label: 'Diklatpim III',
+                label: "Diklatpim III",
                 data: diklatpimIII,
-                backgroundColor: 'rgba(42, 157, 143, 0.8)',
-                borderColor: 'rgba(42, 157, 143, 1)',
-                borderWidth: 1
+                backgroundColor: "rgba(42, 157, 143, 0.8)",
+                borderColor: "rgba(42, 157, 143, 1)",
+                borderWidth: 1,
               },
               {
-                label: 'Diklatpim II',
+                label: "Diklatpim II",
                 data: diklatpimII,
-                backgroundColor: 'rgba(244, 162, 97, 0.8)',
-                borderColor: 'rgba(244, 162, 97, 1)',
-                borderWidth: 1
+                backgroundColor: "rgba(244, 162, 97, 0.8)",
+                borderColor: "rgba(244, 162, 97, 1)",
+                borderWidth: 1,
               },
               {
-                label: 'Prajabatan',
+                label: "Prajabatan",
                 data: prajabatan,
-                backgroundColor: 'rgba(155, 89, 182, 0.8)',
-                borderColor: 'rgba(155, 89, 182, 1)',
-                borderWidth: 1
+                backgroundColor: "rgba(155, 89, 182, 0.8)",
+                borderColor: "rgba(155, 89, 182, 1)",
+                borderWidth: 1,
               },
               {
-                label: 'ADUM',
+                label: "ADUM",
                 data: adum,
-                backgroundColor: 'rgba(52, 152, 219, 0.8)',
-                borderColor: 'rgba(52, 152, 219, 1)',
-                borderWidth: 1
+                backgroundColor: "rgba(52, 152, 219, 0.8)",
+                borderColor: "rgba(52, 152, 219, 1)",
+                borderWidth: 1,
               },
               {
-                label: 'Belum Diklat',
+                label: "Belum Diklat",
                 data: belumDiklat,
-                backgroundColor: 'rgba(231, 76, 60, 0.8)',
-                borderColor: 'rgba(231, 76, 60, 1)',
-                borderWidth: 1
-              }
-            ]
+                backgroundColor: "rgba(231, 76, 60, 0.8)",
+                borderColor: "rgba(231, 76, 60, 1)",
+                borderWidth: 1,
+              },
+            ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                position: 'top',
+                position: "top",
+                labels: {
+                  font: {
+                    size: 14,
+                    weight: "600",
+                  },
+                  padding: 20,
+                },
               },
               title: {
                 display: true,
-                text: 'Distribusi Jenis Pelatihan per Eselon'
-              }
+                text: "Distribusi Jenis Pelatihan per Eselon",
+                font: {
+                  size: 18,
+                  weight: "700",
+                },
+                padding: {
+                  top: 10,
+                  bottom: 30,
+                },
+              },
             },
             scales: {
               y: {
                 beginAtZero: true,
                 title: {
                   display: true,
-                  text: 'Jumlah Pegawai'
+                  text: "Jumlah Pegawai",
+                  font: {
+                    size: 14,
+                    weight: "600",
+                  },
                 },
-                stacked: false
+                ticks: {
+                  font: {
+                    size: 12,
+                  },
+                },
               },
               x: {
                 title: {
                   display: true,
-                  text: 'Eselon'
+                  text: "Eselon",
+                  font: {
+                    size: 14,
+                    weight: "600",
+                  },
                 },
-                stacked: false
-              }
-            }
-          }
+                ticks: {
+                  font: {
+                    size: 12,
+                  },
+                },
+              },
+            },
+          },
         });
       }
 
-      // Fungsi login
+      // Fungsi untuk memeriksa status login
       function checkLoginStatus() {
-        const userDisplay = document.getElementById("user-display");
-        const userInfo = document.getElementById("user-info");
-        const userDropdown = document.getElementById("user-dropdown");
-        const logoutBtn = document.getElementById("logout-btn");
+        const userProfile = document.getElementById("userProfile");
+        const userName = document.getElementById("userName");
+        const userDropdown = document.getElementById("userDropdown");
+        const dropdownName = document.getElementById("dropdownName");
+        const dropdownUsername = document.getElementById("dropdownUsername");
+        const logoutBtn = document.getElementById("logoutBtn");
 
         const loginData = localStorage.getItem("loginData");
         if (loginData) {
           const userData = JSON.parse(loginData);
-          userDisplay.textContent = userData.name;
+          userName.textContent = userData.name;
+          dropdownName.textContent = userData.name;
+          dropdownUsername.textContent =
+            userData.username || "user@bkpsdm.go.id";
 
-          userInfo.addEventListener("click", function (e) {
+          // Toggle dropdown
+          userProfile.addEventListener("click", function (e) {
             e.stopPropagation();
             userDropdown.classList.toggle("active");
           });
 
+          // Tutup dropdown ketika klik di luar
           document.addEventListener("click", function () {
             userDropdown.classList.remove("active");
           });
 
+          // Logout functionality
           logoutBtn.addEventListener("click", function () {
             localStorage.removeItem("loginData");
             alert("Anda telah logout.");
             window.location.reload();
           });
         } else {
-          userDisplay.textContent = "Guest";
+          userName.textContent = "Guest";
+          dropdownName.textContent = "Pengunjung";
+          dropdownUsername.textContent = "Silakan login";
         }
       }
 
@@ -1173,7 +1646,30 @@
         // Setup login functionality
         checkLoginStatus();
 
-        console.log("✅ Dashboard pelatihan manajerial berhasil diinisialisasi");
+        // Setup search
+        document
+          .querySelector(".search-box input")
+          .addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+              const query = this.value.trim();
+              if (query) {
+                alert(
+                  `Pencarian untuk: ${query}\nFitur pencarian dalam pengembangan.`
+                );
+                this.value = "";
+              }
+            }
+          });
+
+        // Tambahkan animasi delay
+        const fadeElements = document.querySelectorAll(".fade-in");
+        fadeElements.forEach((el, index) => {
+          el.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        console.log(
+          "✅ Dashboard pelatihan manajerial berhasil diinisialisasi"
+        );
       }
 
       // Start when page loads
