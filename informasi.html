@@ -2021,7 +2021,7 @@
       let allBerita = [];
       let filteredBerita = [];
       let currentPage = 1;
-      const itemsPerPage = 9; // Diubah dari 6 menjadi 9 karena kartu lebih kecil
+      const itemsPerPage = 9;
       let totalPages = 1;
       let categories = [];
 
@@ -2031,7 +2031,140 @@
       let banners = [];
       let totalSlides = 0;
 
-      // ====== FETCH DATA FROM SPREADSHEET ======
+      // ====== DATA SAMPEL (Untuk testing jika API tidak tersedia) ======
+      const sampleBerita = [
+        {
+          id: 1,
+          judul: "Pelatihan Dasar PNS Tahun 2025 Dibuka",
+          deskripsi: "BKPSDM membuka pendaftaran pelatihan dasar bagi PNS baru di lingkungan Pemkab Ciamis.",
+          kategori: "Pelatihan",
+          status: "Aktif",
+          tanggal: "2025-01-15",
+          penulis: "Admin BKPSDM",
+          gambar_url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+          konten: "<p>Badan Kepegawaian dan Pengembangan Sumber Daya Manusia (BKPSDM) Kabupaten Ciamis membuka pendaftaran Pelatihan Dasar PNS Tahun 2025. Pelatihan ini diperuntukkan bagi PNS baru yang telah diangkat tahun 2024 dan 2025.</p><p>Pendaftaran dibuka mulai 15 Januari hingga 30 Januari 2025. Pelaksanaan pelatihan direncanakan pada bulan Februari 2025 dengan sistem blended learning (online dan offline).</p><h3>Persyaratan Pendaftaran:</h3><ul><li>PNS yang diangkat tahun 2024-2025</li><li>Melengkapi berkas administrasi</li><li>Surat ijin dari atasan langsung</li><li>Mengisi formulir pendaftaran online</li></ul><p>Untuk informasi lebih lanjut, silakan hubungi Bidang Pengembangan Kompetensi Aparatur BKPSDM.</p>"
+        },
+        {
+          id: 2,
+          judul: "Pengumuman Hasil Asesmen Kompetensi Teknis",
+          deskripsi: "Hasil asesmen kompetensi teknis untuk jenjang Administrator telah diumumkan.",
+          kategori: "Asesmen",
+          status: "Aktif",
+          tanggal: "2025-01-10",
+          penulis: "Tim Asesmen",
+          gambar_url: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+          konten: "<p>BKPSDM Kabupaten Ciamis telah mengumumkan hasil asesmen kompetensi teknis untuk jenjang Administrator. Asesmen yang dilaksanakan pada Desember 2024 telah diikuti oleh 150 peserta dari berbagai OPD.</p><p>Hasil dapat dilihat melalui portal SINGGATERA dengan login menggunakan NIP dan password masing-masing. Bagi yang dinyatakan kompeten akan menerima sertifikat kompetensi, sedangkan yang belum kompeten dapat mengikuti remedial pada bulan Februari 2025.</p>"
+        },
+        {
+          id: 3,
+          judul: "Bimtek Penggunaan Aplikasi E-Kinerja",
+          deskripsi: "Pelatihan penggunaan aplikasi e-kinerja untuk meningkatkan akuntabilitas kinerja ASN.",
+          kategori: "Pelatihan",
+          status: "Aktif",
+          tanggal: "2025-01-05",
+          penulis: "Admin Sistem",
+          gambar_url: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+          konten: "<p>BKPSDM akan menyelenggarakan Bimbingan Teknis Penggunaan Aplikasi E-Kinerja untuk seluruh ASN di lingkungan Pemkab Ciamis. Bimtek ini bertujuan untuk meningkatkan pemahaman dan keterampilan dalam menggunakan aplikasi e-kinerja.</p><p>Jadwal bimtek akan dilaksanakan secara bergilir per OPD mulai Januari hingga Maret 2025. Pendaftaran dilakukan melalui koordinator masing-masing OPD.</p>"
+        }
+      ];
+
+      // ====== FUNGSI UTAMA ======
+
+      // Event Delegation untuk Read More Links
+      function setupReadMoreEventListeners() {
+        blogGrid.addEventListener("click", function(e) {
+          const readMoreLink = e.target.closest(".read-more");
+          
+          if (readMoreLink) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const id = readMoreLink.getAttribute("data-id");
+            console.log("Read more clicked, ID:", id);
+            
+            if (id) {
+              showBeritaDetail(id);
+            } else {
+              alert("ID berita tidak ditemukan");
+            }
+          }
+        });
+      }
+
+      // Fungsi untuk menampilkan detail berita
+      function showBeritaDetail(id) {
+        console.log("Mencari berita dengan ID:", id);
+        console.log("Semua berita:", allBerita);
+        
+        // Cari berita dari data yang sudah di-load
+        const berita = allBerita.find(item => String(item.id) === String(id));
+        
+        if (!berita) {
+          console.error("Berita tidak ditemukan untuk ID:", id);
+          alert("Detail berita tidak ditemukan. Silakan coba lagi.");
+          return;
+        }
+
+        // Format tanggal
+        let formattedDate = "Tanggal tidak tersedia";
+        try {
+          const date = new Date(berita.tanggal);
+          if (!isNaN(date.getTime())) {
+            formattedDate = date.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            });
+          }
+        } catch (dateError) {
+          console.warn("Error formatting date:", dateError);
+        }
+
+        // Sembunyikan section lain, tampilkan detail saja
+        infoHero.style.display = "none";
+        blogSection.style.display = "none";
+        videoSection.style.display = "none";
+        highlightSection.style.display = "none";
+        beritaDetailSection.style.display = "block";
+
+        // Scroll ke atas
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // Render detail content
+        beritaDetailContainer.innerHTML = `
+          <div class="berita-detail-header">
+            <span class="berita-detail-category">${berita.kategori || "Umum"}</span>
+            <h1 class="berita-detail-title">${berita.judul}</h1>
+            <div class="berita-detail-meta">
+              <span><i class="far fa-calendar"></i> ${formattedDate}</span>
+              <span><i class="fas fa-user"></i> ${berita.penulis || "Admin"}</span>
+              <span><i class="fas fa-eye"></i> ${berita.views || 0} kali dilihat</span>
+            </div>
+          </div>
+          
+          <div class="berita-detail-image">
+            <img src="${berita.gambar_url || 'https://via.placeholder.com/800x500?text=Gambar+Tidak+Tersedia'}" 
+                 alt="${berita.judul}" 
+                 onerror="this.src='https://via.placeholder.com/800x500?text=Gambar+Tidak+Tersedia'" />
+          </div>
+          
+          <div class="berita-detail-content">
+            ${berita.konten || berita.deskripsi || "<p>Konten tidak tersedia</p>"}
+          </div>
+        `;
+      }
+
+      // Fungsi untuk menyembunyikan detail berita
+      function hideBeritaDetail() {
+        infoHero.style.display = "block";
+        beritaDetailSection.style.display = "none";
+        blogSection.style.display = "block";
+        videoSection.style.display = "block";
+        highlightSection.style.display = "block";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ====== FETCH DATA ======
       async function fetchBanners() {
         try {
           const response = await fetch(`${GAS_API_URL}?action=getBanners`);
@@ -2070,7 +2203,15 @@
           if (!response.ok) throw new Error("Network response was not ok");
 
           const data = await response.json();
-          allBerita = data.berita || [];
+          allBerita = data.berita || data.data || [];
+          
+          // Jika data kosong, gunakan sample data
+          if (allBerita.length === 0) {
+            console.log("Menggunakan data sampel");
+            allBerita = sampleBerita;
+          }
+          
+          console.log("Data berita yang dimuat:", allBerita);
 
           // Extract unique categories
           categories = [
@@ -2087,8 +2228,20 @@
           beritaError.style.display = "none";
         } catch (error) {
           console.error("Error fetching berita:", error);
+          
+          // Gunakan sample data jika fetch gagal
+          console.log("Menggunakan data sampel karena error fetch");
+          allBerita = sampleBerita;
+          
+          categories = [
+            ...new Set(allBerita.map((item) => item.kategori).filter(Boolean)),
+          ];
+          
+          populateCategoryFilter();
+          filterBerita();
+          
           beritaLoading.style.display = "none";
-          beritaError.style.display = "block";
+          beritaError.style.display = "none";
         }
       }
 
@@ -2162,9 +2315,9 @@
           blogCard.style.animationDelay = `${index * 0.05}s`;
           blogCard.innerHTML = `
             <div class="blog-image">
-              <img src="${berita.gambar_url}" alt="${
-            berita.judul
-          }" onerror="this.src='https://via.placeholder.com/400x300?text=Gambar+Tidak+Tersedia'" />
+              <img src="${berita.gambar_url || 'https://via.placeholder.com/400x300?text=Gambar+Tidak+Tersedia'}" 
+                   alt="${berita.judul}" 
+                   onerror="this.src='https://via.placeholder.com/400x300?text=Gambar+Tidak+Tersedia'" />
             </div>
             <div class="blog-content">
               <span class="blog-category">${berita.kategori || "Umum"}</span>
@@ -2185,21 +2338,8 @@
           blogGrid.appendChild(blogCard);
         });
 
-        // Add animation classes after a delay
-        setTimeout(() => {
-          document.querySelectorAll(".blog-card").forEach((card) => {
-            card.classList.add("visible");
-          });
-        }, 100);
-
-        // Add click event for read more
-        document.querySelectorAll(".read-more").forEach((link) => {
-          link.addEventListener("click", function (e) {
-            e.preventDefault();
-            const id = this.dataset.id;
-            showBeritaDetail(id);
-          });
-        });
+        // Setup event listeners setelah render
+        setupReadMoreEventListeners();
       }
 
       function updatePagination() {
@@ -2212,99 +2352,17 @@
         blogPagination.style.display = totalPages > 1 ? "flex" : "none";
       }
 
-      // ====== BERITA DETAIL FUNCTIONS ======
-      async function showBeritaDetail(id) {
-        try {
-          const response = await fetch(
-            `${GAS_API_URL}?action=getBeritaById&id=${id}`
-          );
-          if (!response.ok) throw new Error("Network response was not ok");
-
-          const data = await response.json();
-          const berita = data.berita;
-
-          if (!berita) {
-            alert("Berita tidak ditemukan");
-            return;
-          }
-
-          // Format date
-          const date = new Date(berita.tanggal);
-          const formattedDate = date.toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-
-          // Hide other sections, show detail only
-          infoHero.style.display = "none";
-          blogSection.style.display = "none";
-          videoSection.style.display = "none";
-          highlightSection.style.display = "none";
-          beritaDetailSection.style.display = "block";
-
-          // Scroll to top
-          window.scrollTo({ top: 0, behavior: "smooth" });
-
-          // Render detail content
-          beritaDetailContainer.innerHTML = `
-            <div class="berita-detail-header">
-              <span class="berita-detail-category">${
-                berita.kategori || "Umum"
-              }</span>
-              <h1 class="berita-detail-title">${berita.judul}</h1>
-              <div class="berita-detail-meta">
-                <span><i class="far fa-calendar"></i> ${formattedDate}</span>
-                <span><i class="fas fa-user"></i> ${
-                  berita.penulis || "Admin"
-                }</span>
-                <span><i class="fas fa-eye"></i> ${
-                  berita.views || 0
-                } kali dilihat</span>
-              </div>
-            </div>
-            
-            <div class="berita-detail-image">
-              <img src="${berita.gambar_url}" alt="${
-            berita.judul
-          }" onerror="this.src='https://via.placeholder.com/800x500?text=Gambar+Tidak+Tersedia'" />
-            </div>
-            
-            <div class="berita-detail-content">
-              ${berita.konten || berita.deskripsi}
-            </div>
-          `;
-        } catch (error) {
-          console.error("Error fetching berita detail:", error);
-          alert("Gagal memuat detail berita. Silakan coba lagi.");
-        }
-      }
-
-      function hideBeritaDetail() {
-        infoHero.style.display = "block";
-        beritaDetailSection.style.display = "none";
-        blogSection.style.display = "block";
-        videoSection.style.display = "block";
-        highlightSection.style.display = "block";
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      // ====== RENDER SLIDER ======
+      // ====== SLIDER FUNCTIONS ======
       function renderSlider() {
         if (!sliderWrapper || banners.length === 0) return;
 
-        // Clear existing content
         sliderWrapper.innerHTML = "";
         sliderDots.innerHTML = "";
 
-        // Create slides
         banners.forEach((banner, index) => {
           const slide = document.createElement("div");
           slide.className = "slide";
 
-          // Format date
           const date = new Date(banner.tanggal);
           const formattedDate = date.toLocaleDateString("id-ID", {
             day: "numeric",
@@ -2315,37 +2373,27 @@
           slide.innerHTML = `
             <div class="slide-content">
               <div class="slide-image">
-                <img src="${banner.gambar_url}" alt="${
-            banner.judul
-          }" onerror="this.src='https://via.placeholder.com/600x400?text=Gambar+Tidak+Tersedia'" />
+                <img src="${banner.gambar_url}" alt="${banner.judul}" 
+                     onerror="this.src='https://via.placeholder.com/600x400?text=Gambar+Tidak+Tersedia'" />
               </div>
               <div class="slide-text">
                 <div class="slide-meta">
                   <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
-                  ${
-                    banner.link
-                      ? `<span><i class="fas fa-link"></i> Link Tersedia</span>`
-                      : ""
-                  }
+                  ${banner.link ? `<span><i class="fas fa-link"></i> Link Tersedia</span>` : ""}
                 </div>
                 <h2>${banner.judul}</h2>
                 <p>${banner.deskripsi}</p>
-                ${
-                  banner.link
-                    ? `
+                ${banner.link ? `
                   <a href="${banner.link}" target="_blank" class="btn btn-primary">
                     <i class="fas fa-external-link-alt"></i> Selengkapnya
                   </a>
-                `
-                    : ""
-                }
+                ` : ""}
               </div>
             </div>
           `;
 
           sliderWrapper.appendChild(slide);
 
-          // Create dots
           const dot = document.createElement("div");
           dot.className = `dot ${index === 0 ? "active" : ""}`;
           dot.dataset.index = index;
@@ -2356,7 +2404,6 @@
         updateSlider();
       }
 
-      // ====== SLIDER FUNCTIONS ======
       function goToSlide(index) {
         if (totalSlides === 0) return;
 
@@ -2379,7 +2426,6 @@
         const translateX = -currentSlide * 100;
         sliderWrapper.style.transform = `translateX(${translateX}%)`;
 
-        // Update dots
         document.querySelectorAll(".dot").forEach((dot, index) => {
           dot.classList.toggle("active", index === currentSlide);
         });
@@ -2400,16 +2446,16 @@
         startAutoSlide();
       }
 
-      // ====== SCROLL EFFECTS ======
+      // ====== EVENT LISTENERS ======
+      
+      // Scroll effects
       window.addEventListener("scroll", () => {
-        // Header shadow on scroll
         if (window.scrollY > 50) {
           header.classList.add("scrolled");
         } else {
           header.classList.remove("scrolled");
         }
 
-        // Scroll to top button visibility
         if (window.scrollY > 500) {
           scrollTopBtn.classList.add("active");
         } else {
@@ -2417,7 +2463,7 @@
         }
       });
 
-      // ====== MOBILE MENU TOGGLE ======
+      // Mobile menu toggle
       mobileToggle.addEventListener("click", () => {
         nav.classList.toggle("active");
         mobileToggle.innerHTML = nav.classList.contains("active")
@@ -2433,7 +2479,7 @@
         }
       });
 
-      // ====== USER PROFILE DROPDOWN ======
+      // User profile dropdown
       userBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         userDropdown.classList.toggle("active");
@@ -2444,7 +2490,7 @@
         userDropdown.classList.remove("active");
       });
 
-      // ====== CHECK LOGIN STATUS ======
+      // Check login status
       function checkLoginStatus() {
         const loginData = localStorage.getItem("loginData");
 
@@ -2453,32 +2499,28 @@
           const loginTime = new Date(userData.loginTime);
           const currentTime = new Date();
 
-          // Check if login is still within the same day
           const isSameDay =
             loginTime.getDate() === currentTime.getDate() &&
             loginTime.getMonth() === currentTime.getMonth() &&
             loginTime.getFullYear() === currentTime.getFullYear();
 
           if (isSameDay) {
-            // User is logged in
             userName.textContent = userData.name;
             dropdownName.textContent = userData.name;
             dropdownEmail.textContent =
               userData.email || userData.username || "-";
             return;
           } else {
-            // Login expired
             localStorage.removeItem("loginData");
           }
         }
 
-        // User is not logged in
         userName.textContent = "Guest";
         dropdownName.textContent = "Guest";
         dropdownEmail.textContent = "Silakan login untuk akses lengkap";
       }
 
-      // ====== LOGOUT FUNCTION ======
+      // Logout function
       logoutBtn.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("loginData");
@@ -2486,33 +2528,22 @@
         window.location.reload();
       });
 
-      // ====== PANDUAN CLICK COUNTER ======
+      // Panduan click counter
       const panduanBtn = document.getElementById("panduan-btn");
       const clickCountElement = document.getElementById("click-count");
 
       if (panduanBtn && clickCountElement) {
-        // Get click count from localStorage or set to 0
         let clickCount = localStorage.getItem("panduanClickCount") || 0;
         clickCountElement.textContent = clickCount;
 
-        // Add click event listener
-        panduanBtn.addEventListener("click", function () {
-          // Increment click count
+        panduanBtn.addEventListener("click", function() {
           clickCount++;
           clickCountElement.textContent = clickCount;
-
-          // Save to localStorage
           localStorage.setItem("panduanClickCount", clickCount);
-
-          // Animation feedback
-          this.style.transform = "scale(0.95)";
-          setTimeout(() => {
-            this.style.transform = "scale(1)";
-          }, 150);
         });
       }
 
-      // ====== SCROLL TO TOP ======
+      // Scroll to top
       scrollTopBtn.addEventListener("click", () => {
         window.scrollTo({
           top: 0,
@@ -2520,7 +2551,7 @@
         });
       });
 
-      // ====== SLIDER EVENT LISTENERS ======
+      // Slider navigation
       if (prevBtn && nextBtn) {
         prevBtn.addEventListener("click", () => {
           prevSlide();
@@ -2542,7 +2573,7 @@
         heroSlider.addEventListener("mouseleave", startAutoSlide);
       }
 
-      // ====== PAGINATION EVENT LISTENERS ======
+      // Pagination
       if (prevPageBtn && nextPageBtn) {
         prevPageBtn.addEventListener("click", () => {
           if (currentPage > 1) {
@@ -2569,13 +2600,13 @@
         });
       }
 
-      // ====== FILTER EVENT LISTENERS ======
+      // Filter event listeners
       if (filterKategori && filterStatus) {
         filterKategori.addEventListener("change", filterBerita);
         filterStatus.addEventListener("change", filterBerita);
       }
 
-      // ====== BACK TO BERITA EVENT LISTENER ======
+      // Back to berita
       if (backToBeritaBtn) {
         backToBeritaBtn.addEventListener("click", (e) => {
           e.preventDefault();
@@ -2583,7 +2614,7 @@
         });
       }
 
-      // ====== SEARCH FUNCTIONALITY ======
+      // Search functionality
       const searchInput = document.querySelector(".search-input");
       if (searchInput) {
         searchInput.addEventListener("keypress", (e) => {
@@ -2591,7 +2622,6 @@
             const query = searchInput.value.trim();
             if (query) {
               alert(`Melakukan pencarian untuk: "${query}"`);
-              // In production: window.location.href = `search.html?q=${encodeURIComponent(query)}`;
             }
           }
         });
